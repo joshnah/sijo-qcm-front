@@ -1,0 +1,16 @@
+<div
+  class=" d-flex justify-content-center align-items-center container flex-column gap-2"
+>
+@if (!haveStarted) {
+    <h3>{{ quiz.title }}</h3>
+    <p>Category: {{ quiz.category }}</p>
+    <span>{{ quiz.description }}</span>
+    <button class="btn btn-primary btn-lg" (click)="haveStarted = true">Start test</button>
+  
+} @else {
+    <app-questions-container [quiz]="quiz"></app-questions-container>
+}
+
+
+</div>
+
