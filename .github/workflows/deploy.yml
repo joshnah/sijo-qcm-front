@@ -3,7 +3,10 @@ name: Deploy Angular to GitHub Pages
 on:
   push:
     branches:
-      - main # Change this to your branch name if it's not "main"
+      - "*"
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -26,11 +29,12 @@ jobs:
 
       # Build the Angular project
       - name: Build the project
-        run: npm run build -- --output-path=dist --base-href=/repository-name/
+        run: npm run build -- --output-path=dist --base-href=/sijo-qcm-front/
 
-      # Deploy to GitHub Pages
+      # Deploy to a branch named after the triggering branch
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages
+          branch: ${{ github.ref_name }}-gh-pages
           folder: dist
+
