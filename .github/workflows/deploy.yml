@@ -3,7 +3,8 @@ name: Deploy Angular to GitHub Pages
 on:
   push:
     branches:
-      - "*"
+      - main
+      - workflow-deployment
 
 permissions:
   contents: write
@@ -35,6 +36,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: ${{ github.ref_name }}-gh-pages
+          branch: gh-pages
           folder: dist
 
