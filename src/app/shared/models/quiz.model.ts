@@ -8,14 +8,14 @@ export interface Quiz {
 export interface Question {
     id: number
     text: string;
-    answers: Answer[];
+    options: Option[];
 }
 
-export interface Answer {
+export interface Option {
     id: number
-    option: string;
+    text: string;
 }
 
-export interface SelectedAnswer {
-    answers: Record<number, Set<number>>;
-  }
+export interface SelectedResponses {
+    responses: Record<number, Set<number>>;
+}

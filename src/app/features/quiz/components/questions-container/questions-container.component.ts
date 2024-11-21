@@ -1,13 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
+  inject,
   input,
   OnInit,
   signal,
   WritableSignal,
 } from '@angular/core';
-import { Quiz, SelectedAnswer } from '../../../../shared/models/quiz.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Quiz } from '../../../../shared/models/quiz.model';
+import { QuizService } from '../../services/quiz.service';
+import { FinishConfirmationComponent } from '../finish-confirmation/finish-confirmation.component';
 
 @Component({
   selector: 'app-questions-container',
@@ -19,18 +22,21 @@ import { Quiz, SelectedAnswer } from '../../../../shared/models/quiz.model';
 })
 export class QuestionsContainerComponent implements OnInit {
   quiz = input.required<Quiz>();
-  selectedAnswer: WritableSignal<Record<number, Set<number>>> = signal({});
+  modalService = inject(NgbModal);
+  quizService = inject(QuizService);
+
+  selectedResponses: WritableSignal<Record<number, Set<number>>> = signal({});
 
   ngOnInit(): void {
     const newRecord: Record<number, Set<number>> = {};
     this.quiz().questions.forEach((question) => {
       newRecord[question.id] = new Set();
     });
-    this.selectedAnswer.set(newRecord);
+    this.selectedResponses.set(newRecord);
   }
 
   selectAnswer(questionId: number, answerId: number): void {
-    this.selectedAnswer.update((currentSelection) => {
+    this.selectedResponses.update((currentSelection) => {
       const answerSet = currentSelection[questionId];
       if (answerSet.has(answerId)) {
         answerSet.delete(answerId);
@@ -41,7 +47,9 @@ export class QuestionsContainerComponent implements OnInit {
     });
   }
 
-  // isChecked(questionId: number, answerId: number){
-  //   return this.selectedAnswer()[questionId].has(answerId);
-  // }
+  openFinishConfirmationPopup() {
+    this.modalService.open(FinishConfirmationComponent).closed.subscribe(() => {
+      this.quizService.sendResponses({ responses: this.selectedResponses() });
+    });
+  }
 }
