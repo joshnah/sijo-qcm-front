@@ -30,7 +30,7 @@ jobs:
 
       # Build the Angular project
       - name: Build the project
-        run: npm run build -- --output-path=dist --base-href=/
+        run: npm run build -- --output-path=dist --base-href=/sijo-qcm-front/
 
       # Deploy to a branch named after the triggering branch
       - name: Deploy to GitHub Pages
