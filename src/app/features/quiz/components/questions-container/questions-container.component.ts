@@ -21,7 +21,7 @@ import { FinishConfirmationComponent } from '../finish-confirmation/finish-confi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionsContainerComponent implements OnInit {
-  showResult = false;
+  showResult = signal(false);
   quiz = input.required<Quiz>();
   modalService = inject(NgbModal);
   quizService = inject(QuizService);
@@ -51,7 +51,7 @@ export class QuestionsContainerComponent implements OnInit {
   openFinishConfirmationPopup() {
     this.modalService.open(FinishConfirmationComponent).closed.subscribe(() => {
       this.quizService.sendResponses({ responses: this.selectedResponses() });
-      this.showResult = true;
+      this.showResult.set(true)
     });
   }
 

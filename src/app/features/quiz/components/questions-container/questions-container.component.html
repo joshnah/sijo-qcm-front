@@ -15,7 +15,7 @@
         @for (answer of question.answers; track answer.id) { @let isSelected =
         selectedResponses()[question.id].has(answer.id);
         <div class="btn-group">
-          @if (!showResult) {
+          @if (!showResult()) {
           <input
             class="btn-check"
             type="checkbox"

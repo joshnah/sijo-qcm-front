@@ -26,5 +26,30 @@
         </li>
       </ul>
     </div>
+
+    <div class="btn-group">
+      @if(!authService.isAuthenticated()) {
+      <a
+        class="nav-link mx-2"
+        routerLink="/auth/signin"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        ><button class="btn btn-outline-success">Sign in</button></a
+      >
+      <a
+        class="nav-link"
+        routerLink="/auth/signup"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        ><button class="btn btn-outline-success">Sign up</button></a
+      >
+      } @else {
+      <span>User: {{ authService.user()?.login }}</span>
+
+      <button class="btn btn-outline-danger" (click)="authService.logout()">
+        Logout
+      </button>
+      }
+    </div>
   </div>
 </nav>

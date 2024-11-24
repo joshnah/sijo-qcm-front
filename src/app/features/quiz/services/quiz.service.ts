@@ -13,7 +13,7 @@ export class QuizService {
   quizSignal = signal<Quiz[]>([])
   quiz$ = this.quizSignal.asReadonly();
 
-
+  // TODO: Config quiz backend service
   sendResponses(selectedResponses: SelectedResponses){
     alert("Sending response")
   }
