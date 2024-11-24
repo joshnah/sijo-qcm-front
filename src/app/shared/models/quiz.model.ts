@@ -1,21 +1,23 @@
 export interface Quiz {
+    id: string;
     title: string;
-    description: string;
+    explanation: string;
     category: string;
     questions: Question[];
 }
 
 export interface Question {
-    id: number
+    id: string
     text: string;
-    options: Option[];
+    answers: Answer[];
 }
 
-export interface Option {
-    id: number
+export interface Answer {
+    id: string
     text: string;
+    isCorrect?: boolean;
 }
 
 export interface SelectedResponses {
-    responses: Record<number, Set<number>>;
+    responses: Record<string, Set<string>>;
 }

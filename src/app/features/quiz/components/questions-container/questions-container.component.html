@@ -12,21 +12,51 @@
       </div>
       <!-- Answers as Buttons -->
       <form class="d-flex flex-column gap-3">
-        @for (answer of question.options; track answer.id) {
+        @for (answer of question.answers; track answer.id) { @let isSelected =
+        selectedResponses()[question.id].has(answer.id);
         <div class="btn-group">
+          @if (!showResult) {
           <input
             class="btn-check"
             type="checkbox"
+            [checked]="isSelected"
             id="{{ question.id }}answer{{ answer.id }}"
-            [checked]="selectedResponses()[question.id].has(answer.id)"
             (change)="selectAnswer(question.id, answer.id)"
           />
           <label
-            class="btn btn-outline-primary btn-lg text-start"
+            class="btn btn-lg text-start btn-outline-primary"
             for="{{ question.id }}answer{{ answer.id }}"
           >
             {{ answer.text }}
           </label>
+          } @else {
+          <input
+            class="btn-check"
+            type="checkbox"
+            disabled
+            id="{{ question.id }}answer{{ answer.id }}"
+            (change)="selectAnswer(question.id, answer.id)"
+          />
+          <label
+            class="btn btn-lg text-start"
+            [class.btn-success]="isSelected  && answer.isCorrect"
+            [class.btn-outline-primary]="!isSelected && !answer.isCorrect"
+            [class.btn-outline-success]="!isSelected && answer.isCorrect"
+            [class.btn-danger]="isSelected && !answer.isCorrect"
+            for="{{ question.id }}answer{{ answer.id }}"
+          >
+            {{ answer.text }}
+          </label>
+          @if (!answer.isCorrect && isSelected) {
+
+          <span
+            class="d-flex justify-content-center align-items-center display-5 ms-2 text-danger"
+            aria-label="Wrong answer"
+          >
+            ❌
+          </span>
+          }
+         }
         </div>
         }
       </form>
@@ -36,5 +66,7 @@
 
 }
 <div class="d-flex justify-content-center mt-4">
-  <button class="btn btn-danger" (click)="openFinishConfirmationPopup()">Finish test</button>
+  <button class="btn btn-danger" (click)="openFinishConfirmationPopup()">
+    Finish test
+  </button>
 </div>

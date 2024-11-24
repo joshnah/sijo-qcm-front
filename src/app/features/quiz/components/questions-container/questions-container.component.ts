@@ -21,21 +21,22 @@ import { FinishConfirmationComponent } from '../finish-confirmation/finish-confi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionsContainerComponent implements OnInit {
+  showResult = false;
   quiz = input.required<Quiz>();
   modalService = inject(NgbModal);
   quizService = inject(QuizService);
 
-  selectedResponses: WritableSignal<Record<number, Set<number>>> = signal({});
+  selectedResponses: WritableSignal<Record<string, Set<string>>> = signal({});
 
   ngOnInit(): void {
-    const newRecord: Record<number, Set<number>> = {};
+    const newRecord: Record<string, Set<string>> = {};
     this.quiz().questions.forEach((question) => {
       newRecord[question.id] = new Set();
     });
     this.selectedResponses.set(newRecord);
   }
 
-  selectAnswer(questionId: number, answerId: number): void {
+  selectAnswer(questionId: string, answerId: string): void {
     this.selectedResponses.update((currentSelection) => {
       const answerSet = currentSelection[questionId];
       if (answerSet.has(answerId)) {
@@ -50,6 +51,9 @@ export class QuestionsContainerComponent implements OnInit {
   openFinishConfirmationPopup() {
     this.modalService.open(FinishConfirmationComponent).closed.subscribe(() => {
       this.quizService.sendResponses({ responses: this.selectedResponses() });
+      this.showResult = true;
     });
   }
+
+
 }
