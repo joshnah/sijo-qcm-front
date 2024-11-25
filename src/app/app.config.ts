@@ -14,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(
-      withInterceptors([apiInterceptor, tokenInterceptor, errorInterceptor])
+      //withInterceptors([apiInterceptor, tokenInterceptor, errorInterceptor])
     ),  ],
 };
