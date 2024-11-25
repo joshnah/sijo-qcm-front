@@ -1,16 +1,22 @@
 <div
-  class=" d-flex justify-content-center align-items-center container flex-column gap-2"
+  class="d-flex justify-content-center align-items-center container flex-column gap-2"
 >
-@if (!haveStarted) {
-    <h3>{{ quiz.title }}</h3>
-    <p>Category: {{ quiz.category }}</p>
-    <span>{{ quiz.explanation }}</span>
-    <button class="btn btn-primary btn-lg" (click)="haveStarted = true">Start test</button>
-  
-} @else {
-    <app-questions-container [quiz]="quiz"></app-questions-container>
-}
+  <ng-container *ngIf="!haveStarted; else quizContent">
+    <ng-container *ngIf="selectedQuiz() as quiz; else loading">
+      <h3>{{ quiz.title }}</h3>
+      <p>Category: {{ quiz.category }}</p>
+      <span>{{ quiz.explanation }}</span>
+      <button class="btn btn-primary btn-lg" (click)="startQuiz()">
+        Start test
+      </button>
+    </ng-container>
+  </ng-container>
 
+  <ng-template #quizContent>
+    <app-questions-container *ngIf="selectedQuiz() as quiz" [quiz]="quiz"></app-questions-container>
+  </ng-template>
 
+  <ng-template #loading>
+    <p>Loading quiz...</p>
+  </ng-template>
 </div>
-
