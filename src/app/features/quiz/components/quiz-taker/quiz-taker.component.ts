@@ -1,7 +1,8 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, Signal, computed, inject } from '@angular/core';
 import { QuestionsContainerComponent } from '../questions-container/questions-container.component';
 import { QuizService } from '../../services/quiz.service';
 import { CommonModule } from '@angular/common';
+import { Quiz } from '../../../../shared/models/quiz.model';
 
 @Component({
   selector: 'app-quiz-taker',
@@ -12,17 +13,42 @@ import { CommonModule } from '@angular/common';
 })
 export class QuizTakerComponent implements OnInit {
   haveStarted = false;
+  // Inject QuizService
+  private quizService = inject(QuizService);
   // Reactively read quizzes from the signal
-  quizzes = computed(() => this.quizService.quizSignal());
-  selectedQuiz = computed(() => (this.quizzes() ? this.quizzes() : null)); // Default to the first quiz if available
+  quizzes: Signal<Quiz[]> = this.quizService.quizzesSignal;
+  selectedQuizId: string | null = null; // Store selected quiz ID
+  loading = false; // Loading state for fetching quiz details
 
-  constructor(private quizService: QuizService) {}
 
   ngOnInit(): void {
     this.quizService.fetchAndSetQuizzes().subscribe({
       error: (err) => console.error('Error loading quizzes:', err),
     });
   }
+
+  // Select a quiz by its ID
+  // Fetch and set the selected quiz based on its ID
+  selectQuiz(quiz: any): void {
+    this.selectedQuizId = quiz.id;
+    this.loading = true;
+
+    this.quizService.fetchAndSetAQuiz(quiz.id).subscribe({
+      next: () => {
+        this.loading = false;
+        this.haveStarted = true; // Start the quiz after it loads
+      },
+      error: (err) => {
+        console.error('Error fetching quiz details:', err);
+        this.loading = false;
+      },
+    });
+  }
+
+  selectedQuiz = computed(() => {
+    const quiz = this.quizService.quizSignal();
+    return quiz || null;
+  });
 
   startQuiz(): void {
     this.haveStarted = true;

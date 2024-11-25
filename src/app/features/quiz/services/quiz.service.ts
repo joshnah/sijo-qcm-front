@@ -12,7 +12,8 @@ import { tap } from 'rxjs/operators';
 export class QuizService {
   http = inject(HttpClient)
   constructor() { }
-  quizSignal = signal<Quiz| null>(null)
+  quizSignal = signal<Quiz | null>(null);
+  quizzesSignal = signal<Quiz[]>([]);
   quiz$ = this.quizSignal.asReadonly();
 
   // TODO: Config quiz backend service
@@ -21,10 +22,18 @@ export class QuizService {
   }
 
 
-  fetchAndSetQuizzes(): Observable<Quiz> {
-    return this.http.get<Quiz>("http://localhost:8080/qcm/1").pipe(
+  fetchAndSetQuizzes(): Observable<Quiz[]> {
+    return this.http.get<Quiz[]>("http://localhost:8080/qcm").pipe(
       tap((quizzes) => {
-        this.quizSignal.set(quizzes);
+        this.quizzesSignal.set(quizzes);
+      })
+    );
+  }
+
+  fetchAndSetAQuiz(quizId : String) : Observable<Quiz> {
+    return this.http.get<Quiz>(`http://localhost:8080/qcm/${quizId}`).pipe(
+      tap((quiz) => {
+        this.quizSignal.set(quiz);
       })
     );
   }
