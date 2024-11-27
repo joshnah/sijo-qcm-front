@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { QuizTakerComponent } from './features/quiz/components/quiz-taker/quiz-taker.component';
 import { AuthService } from './core/auth/services/auth.service';
 import { inject } from '@angular/core';
+import { QuizListComponent } from './features/quiz/components/quiz-list/quiz-list.component';
 
 export const routes: Routes = [
   {
@@ -26,7 +27,21 @@ export const routes: Routes = [
   },
   {
     path: 'quiz',
-    component: QuizTakerComponent,
-    title: 'Take quiz',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/quiz/components/quiz-list/quiz-list.component'
+          ).then((m) => m.QuizListComponent),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import(
+            './features/quiz/components/quiz-taker/quiz-taker.component'
+          ).then((m) => m.QuizTakerComponent),
+      },
+    ],
   },
 ];

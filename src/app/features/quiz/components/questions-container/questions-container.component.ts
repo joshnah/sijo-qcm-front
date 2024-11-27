@@ -8,7 +8,11 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Quiz } from '../../../../shared/models/quiz.model';
+import {
+  Quiz,
+  QuizAnswer,
+  Submission,
+} from '../../../../shared/models/quiz.model';
 import { QuizService } from '../../services/quiz.service';
 import { FinishConfirmationComponent } from '../finish-confirmation/finish-confirmation.component';
 
@@ -26,7 +30,7 @@ export class QuestionsContainerComponent implements OnInit {
   modalService = inject(NgbModal);
   quizService = inject(QuizService);
 
-  selectedResponses: WritableSignal<Record<string, Set<string>>> = signal({});
+  selectedResponses: WritableSignal<QuizAnswer> = signal({});
 
   ngOnInit(): void {
     const newRecord: Record<string, Set<string>> = {};
@@ -50,10 +54,20 @@ export class QuestionsContainerComponent implements OnInit {
 
   openFinishConfirmationPopup() {
     this.modalService.open(FinishConfirmationComponent).closed.subscribe(() => {
-      this.quizService.sendResponses({ responses: this.selectedResponses() });
-      this.showResult.set(true)
+      this.submit();
     });
   }
 
-
+  private submit() {
+    this.quizService
+      .submit(this.selectedResponses(), this.quiz().id)
+      .subscribe({
+        next: (submission: Submission) => {
+          this.showResult.set(true);
+        },
+        error: (err) => {
+          console.log('ERROR WHEN SUBMISSION');
+        },
+      });
+  }
 }

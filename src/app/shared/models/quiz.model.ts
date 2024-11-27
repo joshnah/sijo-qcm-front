@@ -18,6 +18,19 @@ export interface Answer {
     isCorrect?: boolean;
 }
 
-export interface SelectedResponses {
-    responses: Record<string, Set<string>>;
+type AnswerSet = Set<string>;
+type StringId = string;
+export type QuizAnswer = Record<StringId, AnswerSet>;
+
+export interface SubmissionRequest {
+    quizId: string; 
+    answers: QuizAnswer;
 }
+
+export interface Submission {
+    submissionId: string; 
+    request: SubmissionRequest;
+    correctAnswers: QuizAnswer;
+    score?: number;
+}
+

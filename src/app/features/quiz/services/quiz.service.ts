@@ -1,5 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Quiz, SelectedResponses } from '../../../shared/models/quiz.model';
+import {
+  Quiz,
+  QuizAnswer,
+  Submission,
+  SubmissionRequest,
+} from '../../../shared/models/quiz.model';
 // import { SampleQuiz } from '../mocks/quiz.mock';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -7,36 +12,30 @@ import { SampleQuiz } from '../mocks/quiz.mock';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuizService {
-  http = inject(HttpClient)
-  constructor() { }
-  quizSignal = signal<Quiz | null>(null);
+  http = inject(HttpClient);
+  constructor() {}
   quizzesSignal = signal<Quiz[]>([]);
-  quiz$ = this.quizSignal.asReadonly();
+  quizzes = this.quizzesSignal.asReadonly();
 
-  // TODO: Config quiz backend service
-  sendResponses(selectedResponses: SelectedResponses){
-    alert("Sending response")
+  submit(answers: QuizAnswer, quizId: string): Observable<Submission> {
+    return this.http.post<Submission>('/submission', {
+      answers,
+      quizId,
+    });
   }
 
-
-  fetchAndSetQuizzes(): Observable<Quiz[]> {
-    return this.http.get<Quiz[]>("http://localhost:8080/qcm").pipe(
+  fetchQuizzes(): Observable<Quiz[]> {
+    return this.http.get<Quiz[]>('/quiz').pipe(
       tap((quizzes) => {
         this.quizzesSignal.set(quizzes);
       })
     );
   }
 
-  fetchAndSetAQuiz(quizId : String) : Observable<Quiz> {
-    return this.http.get<Quiz>(`http://localhost:8080/qcm/${quizId}`).pipe(
-      tap((quiz) => {
-        this.quizSignal.set(quiz);
-      })
-    );
+  fetchQuiz(quizId: String): Observable<Quiz> {
+    return this.http.get<Quiz>(`/quiz/${quizId}`);
   }
-
-
 }

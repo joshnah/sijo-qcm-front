@@ -1,43 +1,12 @@
-<div class="d-flex justify-content-center align-items-center container flex-column gap-3">
-  <!-- Display List of Available Quizzes -->
-  <ng-container *ngIf="!haveStarted; else quizContent">
-    <div *ngIf="quizzes() && quizzes()!.length > 0; else noQuizzes">
-      <h2 class="mb-3">Available Quizzes</h2>
-      <ul class="list-group w-100">
-        <li 
-          class="list-group-item d-flex justify-content-between align-items-center p-3"
-          *ngFor="let quiz of quizzes()"
-          (click)="selectQuiz(quiz)"
-          [class.active]="quiz.id === selectedQuizId"
-          style="cursor: pointer;"
-        >
-          <div>
-            <h5 class="mb-1">{{ quiz.title }}</h5>
-            <p class="mb-0 text-muted">Category: {{ quiz.category }}</p>
-          </div>
-          <button class="btn btn-outline-primary btn-sm" [disabled]="loading">
-            {{ quiz.id === selectedQuizId && loading ? 'Loading...' : 'Select' }}
-          </button>
-        </li>
-      </ul>
-    </div>
-    <ng-template #noQuizzes>
-      <p class="text-muted">No quizzes available at the moment. Please check back later!</p>
-    </ng-template>
-  </ng-container>
+<div
+  class="d-flex justify-content-center align-items-center container flex-column gap-3"
+>
+  @if (!loading()) {
+  <app-questions-container [quiz]="quiz"></app-questions-container>
 
-  <!-- Quiz Content -->
-  <ng-template #quizContent>
-    <div *ngIf="selectedQuiz() as quiz; else loading">
-      <h2>Selected Quiz: {{ quiz.title }}</h2>
-    </div>    
-    <app-questions-container *ngIf="selectedQuiz() as quiz" [quiz]="quiz"></app-questions-container>
-  </ng-template>
-
-  <!-- Loading Spinner -->
-  <ng-template #loading>
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </ng-template>
+  } @else {
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  }
 </div>
