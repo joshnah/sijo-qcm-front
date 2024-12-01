@@ -25,7 +25,7 @@ export class QuizListComponent implements OnInit {
 
 
   selectQuiz(quiz: Quiz):void{
-    this.router.navigate([`/quiz/${quiz.id}`]);
+    this.router.navigate([`/quizzes/${quiz._id}`]);
   }
 
 

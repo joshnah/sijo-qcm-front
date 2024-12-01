@@ -11,10 +11,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Quiz,
   QuizAnswer,
-  Submission,
 } from '../../../../shared/models/quiz.model';
 import { QuizService } from '../../services/quiz.service';
 import { FinishConfirmationComponent } from '../finish-confirmation/finish-confirmation.component';
+import { Router } from '@angular/router';
+import { SubmissionConfirmation } from '../../../../shared/models/submission.model';
 
 @Component({
   selector: 'app-questions-container',
@@ -25,10 +26,10 @@ import { FinishConfirmationComponent } from '../finish-confirmation/finish-confi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionsContainerComponent implements OnInit {
-  showResult = signal(false);
   quiz = input.required<Quiz>();
   modalService = inject(NgbModal);
   quizService = inject(QuizService);
+  router = inject(Router);
 
   selectedResponses: WritableSignal<QuizAnswer> = signal({});
 
@@ -57,17 +58,11 @@ export class QuestionsContainerComponent implements OnInit {
       this.submit();
     });
   }
-
   private submit() {
     this.quizService
-      .submit(this.selectedResponses(), this.quiz().id)
-      .subscribe({
-        next: (submission: Submission) => {
-          this.showResult.set(true);
-        },
-        error: (err) => {
-          console.log('ERROR WHEN SUBMISSION');
-        },
+      .submit(this.selectedResponses(), this.quiz()._id)
+      .subscribe((confirmation: SubmissionConfirmation) => {
+        this.router.navigate([`/submissions/${confirmation.submissionId}`]);
       });
   }
 }

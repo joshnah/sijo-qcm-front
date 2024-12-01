@@ -5,7 +5,7 @@
   @if (!!quizzes()) {
   <h2 class="mb-3">Available Quizzes</h2>
   <ul class="list-group w-100">
-    @for (quiz of quizzes(); track quiz.id) {
+    @for (quiz of quizzes(); track quiz._id) {
     <li
       class="list-group-item d-flex justify-content-between align-items-center p-3"
     >

@@ -1,5 +1,5 @@
 export interface Quiz {
-    id: string;
+    _id: string;
     title: string;
     explanation: string;
     category: string;
@@ -14,23 +14,9 @@ export interface Question {
 
 export interface Answer {
     id: string
-    text: string;
+    option: string;
     isCorrect?: boolean;
 }
-
+type QuestionId = string;
 type AnswerSet = Set<string>;
-type StringId = string;
-export type QuizAnswer = Record<StringId, AnswerSet>;
-
-export interface SubmissionRequest {
-    quizId: string; 
-    answers: QuizAnswer;
-}
-
-export interface Submission {
-    submissionId: string; 
-    request: SubmissionRequest;
-    correctAnswers: QuizAnswer;
-    score?: number;
-}
-
+export type QuizAnswer = Record<QuestionId, AnswerSet>;

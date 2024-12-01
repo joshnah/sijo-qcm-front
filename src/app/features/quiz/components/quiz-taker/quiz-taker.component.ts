@@ -11,6 +11,7 @@ import { QuestionsContainerComponent } from '../questions-container/questions-co
 import { QuizService } from '../../services/quiz.service';
 import { CommonModule } from '@angular/common';
 import { Quiz } from '../../../../shared/models/quiz.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-quiz-taker',
@@ -18,10 +19,10 @@ import { Quiz } from '../../../../shared/models/quiz.model';
   imports: [CommonModule, QuestionsContainerComponent],
   templateUrl: './quiz-taker.component.html',
   styleUrls: ['./quiz-taker.component.css'],
-  changeDetection:ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizTakerComponent implements OnInit {
-  @Input() quizId: string = '';
+  route = inject(ActivatedRoute);
   loading = signal(true);
   haveStarted = false;
   quiz!: Quiz;
@@ -29,12 +30,12 @@ export class QuizTakerComponent implements OnInit {
   private quizService = inject(QuizService);
 
   ngOnInit(): void {
-    this.quizService.fetchQuiz(this.quizId).subscribe({
-      next: (quiz) => {
+    const quizId = this.route.snapshot.paramMap.get('id');
+    if (quizId) {
+      this.quizService.fetchQuiz(quizId).subscribe((quiz) => {
         this.quiz = quiz;
         this.loading.set(false);
-      },
-      error: (err) => console.error('Error loading quizzes:', err),
-    });
+      });
+    }
   }
 }
