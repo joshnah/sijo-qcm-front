@@ -6,11 +6,9 @@
     "sijo-qcm-front": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular": {
-          "component": {
-            "changeDetection": "OnPush",
-            "standalone":true
-          }
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush",
+          "standalone": true
         }
       },
       "root": "",

@@ -1,5 +1,5 @@
 export interface Quiz {
-    id: string;
+    _id: string;
     title: string;
     explanation: string;
     category: string;
@@ -14,10 +14,9 @@ export interface Question {
 
 export interface Answer {
     id: string
-    text: string;
+    option: string;
     isCorrect?: boolean;
 }
-
-export interface SelectedResponses {
-    responses: Record<string, Set<string>>;
-}
+type QuestionId = string;
+type AnswerSet = Set<string>;
+export type QuizAnswer = Record<QuestionId, AnswerSet>;

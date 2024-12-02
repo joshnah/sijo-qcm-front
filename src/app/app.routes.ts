@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { QuizTakerComponent } from './features/quiz/components/quiz-taker/quiz-taker.component';
 import { AuthService } from './core/auth/services/auth.service';
 import { inject } from '@angular/core';
 
@@ -25,8 +24,34 @@ export const routes: Routes = [
     canActivate: [() => !inject(AuthService).isAuthenticated()],
   },
   {
-    path: 'quiz',
-    component: QuizTakerComponent,
-    title: 'Take quiz',
+    path: 'quizzes',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/quiz/components/quiz-list/quiz-list.component'
+          ).then((m) => m.QuizListComponent),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import(
+            './features/quiz/components/quiz-taker/quiz-taker.component'
+          ).then((m) => m.QuizTakerComponent),
+      },
+    ],
+  },
+  {
+    path: 'submissions',
+    children: [
+      {
+        path: ':id',
+        loadComponent: () =>
+          import(
+            './features/quiz/components/submission/submission.component'
+          ).then((m) => m.SubmissionComponent),
+      },
+    ],
   },
 ];

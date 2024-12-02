@@ -8,9 +8,14 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Quiz } from '../../../../shared/models/quiz.model';
+import {
+  Quiz,
+  QuizAnswer,
+} from '../../../../shared/models/quiz.model';
 import { QuizService } from '../../services/quiz.service';
 import { FinishConfirmationComponent } from '../finish-confirmation/finish-confirmation.component';
+import { Router } from '@angular/router';
+import { SubmissionConfirmation } from '../../../../shared/models/submission.model';
 
 @Component({
   selector: 'app-questions-container',
@@ -21,12 +26,12 @@ import { FinishConfirmationComponent } from '../finish-confirmation/finish-confi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuestionsContainerComponent implements OnInit {
-  showResult = signal(false);
   quiz = input.required<Quiz>();
   modalService = inject(NgbModal);
   quizService = inject(QuizService);
+  router = inject(Router);
 
-  selectedResponses: WritableSignal<Record<string, Set<string>>> = signal({});
+  selectedResponses: WritableSignal<QuizAnswer> = signal({});
 
   ngOnInit(): void {
     const newRecord: Record<string, Set<string>> = {};
@@ -50,10 +55,14 @@ export class QuestionsContainerComponent implements OnInit {
 
   openFinishConfirmationPopup() {
     this.modalService.open(FinishConfirmationComponent).closed.subscribe(() => {
-      this.quizService.sendResponses({ responses: this.selectedResponses() });
-      this.showResult.set(true)
+      this.submit();
     });
   }
-
-
+  private submit() {
+    this.quizService
+      .submit(this.selectedResponses(), this.quiz()._id)
+      .subscribe((confirmation: SubmissionConfirmation) => {
+        this.router.navigate([`/submissions/${confirmation.submissionId}`]);
+      });
+  }
 }
