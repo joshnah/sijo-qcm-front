@@ -14,7 +14,7 @@ import { Credentials } from '../../models/credentials.model';
   selector: 'app-auth-page',
   standalone: true,
   templateUrl: './auth-page.component.html',
-  styleUrl: './auth-page.component.scss',
+  styleUrl: './auth-page.component.css',
   imports: [FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
 })
 export class AuthPageComponent implements OnInit {

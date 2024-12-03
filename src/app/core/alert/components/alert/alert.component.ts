@@ -7,7 +7,7 @@ import { AlertService } from '../../services/alert.service';
   standalone: true,
   imports: [NgbAlertModule],
   templateUrl: './alert.component.html',
-  styleUrl: './alert.component.scss',
+  styleUrl: './alert.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertComponent {
