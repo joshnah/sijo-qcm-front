@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
 
-const BACKEND = 'https://sijo-qcm-backend.purpleground-9e91f953.francecentral.azurecontainerapps.io'
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
-  const apiReq = req.clone({ url: `${BACKEND}${req.url}` });
+  const apiReq = req.clone({ url: `${environment.backendUrl}${req.url}` });
   return next(apiReq);
 };
