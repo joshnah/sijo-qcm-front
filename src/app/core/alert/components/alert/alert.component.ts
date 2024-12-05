@@ -13,6 +13,6 @@ import { AlertService } from '../../services/alert.service';
 export class AlertComponent {
   alertService = inject(AlertService);
   close(){
-    this.alertService.alertMessage.set(null);
+    this.alertService.deleteMessage();
   }
 }

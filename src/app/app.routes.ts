@@ -1,8 +1,14 @@
 import { Routes } from '@angular/router';
 import { AuthService } from './core/auth/services/auth.service';
 import { inject } from '@angular/core';
+import { AuthGuard } from './core/auth/guards/auth.guard';
 
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'quizzes',
+    pathMatch: 'full',
+  },
   {
     path: 'auth',
     children: [
@@ -39,6 +45,7 @@ export const routes: Routes = [
           import(
             './features/quiz/components/quiz-taker/quiz-taker.component'
           ).then((m) => m.QuizTakerComponent),
+        canActivate: [AuthGuard],
       },
     ],
   },
@@ -53,5 +60,6 @@ export const routes: Routes = [
           ).then((m) => m.SubmissionComponent),
       },
     ],
+    canActivate: [AuthGuard],
   },
 ];

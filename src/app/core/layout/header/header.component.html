@@ -44,10 +44,9 @@
         ><button class="btn btn-outline-success">Sign up</button></a
       >
       } @else {
-      <span>User: {{ authService.user()?.login }}</span>
 
       <button class="btn btn-outline-danger" (click)="authService.logout()">
-        Logout
+      Logout as {{authService.user()?.login}}
       </button>
       }
     </div>

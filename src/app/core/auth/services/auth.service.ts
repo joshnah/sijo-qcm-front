@@ -12,27 +12,24 @@ import { AlertService } from '../../alert/services/alert.service';
   providedIn: 'root',
 })
 export class AuthService {
-
+  
   http = inject(HttpClient);
   jwtService = inject(JwtService);
   router = inject(Router);
   alertService = inject(AlertService);
-
-  private userSignal = signal<User | null>(null);
   isAuthenticated = computed(() => !!this.userSignal());
+  
+  private userSignal = signal<User | null>(null);
   user = this.userSignal.asReadonly();
 
-
-  setUserFromLocalStorage(): void {
-    const user = this.jwtService.getUser();
-    if (user){
-      this.setAuth(user);
-    }
+  constructor(){
+    this.setUserFromLocalStorage();
   }
-  // TODO: need to config backend authentication
+
+
   login(credentials: Credentials): Observable<User> {
     return this.http
-    .post<User>('/auth/', credentials)
+    .post<User>('/auth/signin', credentials)
     .pipe(
       tap((loginResponse) => {
         this.setAuth({ token: loginResponse.token, login: credentials.login, role: loginResponse.role });
@@ -40,7 +37,7 @@ export class AuthService {
       catchError((error) => {
         console.error('Error occurred:', error);
   
-        this.alertService.alertMessage.set({ message: "Login failed", type: "danger" });
+        this.alertService.setMessage({ message: "Login failed", type: "danger" });
   
         return throwError(() => new Error('Login failed. Please try again.'));
       })
@@ -64,5 +61,12 @@ export class AuthService {
   logout(): void {
     this.purgeAuth();
     this.router.navigate(['/']);
+  }
+
+  private setUserFromLocalStorage(): void {
+    const user = this.jwtService.getUser();
+    if (user){
+      this.setAuth(user);
+    }
   }
 }
