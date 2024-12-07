@@ -30,7 +30,7 @@ jobs:
 
       # Build the Angular project
       - name: Build the project
-        run: npm run build -- --output-path=dist --base-href=/sijo-qcm-front/
+        run: npm run build:prod
       
       - name: Add 404.html for routing
         run: cp dist/index.html dist/404.html
