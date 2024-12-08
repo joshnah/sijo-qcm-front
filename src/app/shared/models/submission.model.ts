@@ -13,7 +13,6 @@ export interface Submission {
     score: number;
 }
 
-
 export interface SubmissionConfirmation {
     submissionId: string;
 }
