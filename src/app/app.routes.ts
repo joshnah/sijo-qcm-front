@@ -43,6 +43,14 @@ export const routes: Routes = [
         path: ':id',
         loadComponent: () =>
           import(
+            './features/quiz/components/quiz-info/quiz-info.component'
+          ).then((m) => m.QuizInfoComponent),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: ':id/take',
+        loadComponent: () =>
+          import(
             './features/quiz/components/quiz-taker/quiz-taker.component'
           ).then((m) => m.QuizTakerComponent),
         canActivate: [AuthGuard],
