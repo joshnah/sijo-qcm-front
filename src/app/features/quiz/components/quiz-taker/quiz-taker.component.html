@@ -1,13 +1,8 @@
-
-  @if (!loading()) {
-    <div
+<div
   class="d-flex justify-content-center align-items-center container flex-column gap-3"
 >
-  <app-questions-container [quiz]="quiz"></app-questions-container>
-</div>
+  @if (quiz()) {
 
-  } @else {
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
+  <app-questions-container [quiz]="quiz()!"></app-questions-container>
   }
+</div>

@@ -32,8 +32,7 @@ export class SubmissionComponent implements OnInit {
     if (submissionId) {
       this.quizService.fetchSubmission(submissionId).subscribe((submission) => {
         this.submission = submission;
-        this.quizService.fetchQuiz(submission.quizId).subscribe((quiz:Quiz)=>{
-          console.log(submission,quiz);
+        this.quizService.fetchQuizWithQuestions(submission.quizId).subscribe((quiz:Quiz)=>{
           this.quiz = quiz;
           this.loading.set(false)
         })

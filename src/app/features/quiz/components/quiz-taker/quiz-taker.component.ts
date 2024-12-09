@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   ChangeDetectionStrategy,
+  input,
 } from '@angular/core';
 import { QuestionsContainerComponent } from '../questions-container/questions-container.component';
 import { QuizService } from '../../services/quiz.service';
@@ -22,19 +23,15 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizTakerComponent implements OnInit {
-  route = inject(ActivatedRoute);
-  loading = signal(true);
-  haveStarted = false;
-  quiz!: Quiz;
-
+  quiz = signal<Quiz | null>(null);
+  private route = inject(ActivatedRoute);
   private quizService = inject(QuizService);
 
   ngOnInit(): void {
     const quizId = this.route.snapshot.paramMap.get('id');
     if (quizId) {
-      this.quizService.fetchQuiz(quizId).subscribe((quiz) => {
-        this.quiz = quiz;
-        this.loading.set(false);
+      this.quizService.fetchQuizWithQuestions(quizId).subscribe((quiz) => {
+        this.quiz.set(quiz);
       });
     }
   }
