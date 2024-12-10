@@ -15,7 +15,7 @@ import { Credentials } from '../../models/credentials.model';
   standalone: true,
   templateUrl: './auth-page.component.html',
   styleUrl: './auth-page.component.css',
-  imports: [FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [FormsModule, RouterLink, RouterLinkActive],
 })
 export class AuthPageComponent implements OnInit {
   authService = inject(AuthService);
