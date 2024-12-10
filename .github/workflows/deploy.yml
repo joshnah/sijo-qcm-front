@@ -28,6 +28,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Test
+      - name: Run tests
+        run: npm run test:cicd
+
       # Build the Angular project
       - name: Build the project
         run: npm run build:prod

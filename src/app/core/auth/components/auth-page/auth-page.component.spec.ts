@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuthPageComponent } from './auth-page.component';
+import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 
 describe('AuthPageComponent', () => {
   let component: AuthPageComponent;
@@ -8,7 +10,19 @@ describe('AuthPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthPageComponent]
+      imports: [AuthPageComponent],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: { isAuthenticated: () => {} },
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: {snapshot:{
+            url: 'signin'
+          }}
+        }
+      ],
     })
     .compileComponents();
 

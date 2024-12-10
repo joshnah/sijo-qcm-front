@@ -21,3 +21,20 @@ export const MockQuiz: Quiz = {
   ],
 };
 
+
+export const mockSubmission: Submission = {
+  id: "submission-12345",
+  answers: {
+      "q1": new Set(["A"]),
+      "q2": new Set(["B", "C"]),
+      "q3": new Set(["D"]),
+  },
+  quizId: "quiz-67890",
+  correctAnswers: {
+      "q1": new Set(["A"]),
+      "q2": new Set(["B", "C"]),
+      "q3": new Set(["D"]),
+  },
+  score: 100, // Assuming a full score for this mock
+};
+
