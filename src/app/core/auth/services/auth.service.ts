@@ -5,7 +5,7 @@ import { catchError, Observable, of, tap } from 'rxjs';
 
 import { throwError } from 'rxjs';
 import { Credentials } from '../models/credentials.model';
-import { User } from '../models/user.model';
+import { Role, User } from '../models/user.model';
 import { JwtService } from './jwt.service';
 import { AlertService } from '../../alert/services/alert.service';
 @Injectable({
@@ -61,6 +61,10 @@ export class AuthService {
   logout(): void {
     this.purgeAuth();
     this.router.navigate(['/']);
+  }
+
+  hasTutorAccess():boolean{
+      return this.user()?.role === Role.ADMIN || this.user()?.role === Role.TUTOR
   }
 
   private setUserFromLocalStorage(): void {

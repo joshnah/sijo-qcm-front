@@ -60,7 +60,7 @@ export class QuestionsContainerComponent implements OnInit {
   }
   private submit() {
     this.quizService
-      .submit(this.selectedResponses(), this.quiz()._id)
+      .submit(this.selectedResponses(), this.quiz()._id!)
       .subscribe((confirmation: SubmissionConfirmation) => {
         this.router.navigate([`/submissions/${confirmation.submissionId}`]);
       });

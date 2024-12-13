@@ -1,30 +1,33 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  Signal,
+} from '@angular/core';
 import { QuizService } from '../../services/quiz.service';
 import { Quiz } from '../../../../shared/models/quiz.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-quiz-list',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './quiz-list.component.html',
   styleUrl: './quiz-list.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizListComponent implements OnInit {
   private quizService = inject(QuizService);
   private router = inject(Router);
-  quizzes: Signal<Quiz[]> = this.quizService.quizzesSignal;
+  private authService = inject(AuthService);
 
+  quizzes: Signal<Quiz[]> = this.quizService.quizzesSignal;
+  hasTutorAcess = false;
 
   ngOnInit(): void {
-    this.quizService.fetchQuizzes().subscribe({
-      error: (err) => console.error('Error loading quizzes:', err),
-    });
-  }
-
-
-  selectQuiz(quiz: Quiz):void{
-    this.router.navigate([`/quizzes/${quiz._id}`]);
+    this.hasTutorAcess = this.authService.hasTutorAccess();
+    this.quizService.fetchQuizzes();
   }
 }

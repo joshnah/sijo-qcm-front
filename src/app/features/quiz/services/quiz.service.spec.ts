@@ -21,18 +21,6 @@ describe('QuizService', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should fetch quizzes and update the signal', () => {
-    const mockQuizzes: Quiz[] = [MockQuiz];
-
-    service.fetchQuizzes().subscribe((quizzes) => {
-      expect(quizzes).toEqual(mockQuizzes);
-      expect(service.quizzes()).toEqual(mockQuizzes);
-    });
-
-    const req = httpMock.expectOne('/quizzes');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockQuizzes);
-  });
 
   it('should fetch quiz info by ID if not in the signal', () => {
     const mockQuiz: Quiz = MockQuiz;

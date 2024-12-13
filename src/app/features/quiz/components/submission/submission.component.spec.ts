@@ -4,6 +4,7 @@ import { SubmissionComponent } from './submission.component';
 import { QuizService } from '../../services/quiz.service';
 import { provideRouter } from '@angular/router';
 import { AuthService } from '../../../../core/auth/services/auth.service';
+import { SubmissionService } from '../../services/submission.service';
 
 describe('SubmissionComponent', () => {
   let component: SubmissionComponent;
@@ -15,16 +16,15 @@ describe('SubmissionComponent', () => {
       providers: [
         {
           provide: QuizService,
-          useValue: {}
+          useValue: {},
         },
         {
-          provide: AuthService,
-          useValue: { isAuthenticated: () => {} },
+          provide: SubmissionService,
+          useValue: {},
         },
         provideRouter([]),
-      ]
-    })
-    .compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SubmissionComponent);
     component = fixture.componentInstance;
