@@ -76,7 +76,7 @@ export class QuizEditComponent implements OnInit {
 
   delete(): void {
     this.quizService.deleteQuiz(this.quiz()!).subscribe(() => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/quizzes']);
       this.alertService.setMessage({
         message: 'Quiz has been deleted',
         type: 'success',
@@ -86,7 +86,7 @@ export class QuizEditComponent implements OnInit {
 
   create(): void {
     this.quizService.createQuiz(this.quiz()!).subscribe(() => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/quizzes']);
       this.alertService.setMessage({
         message: 'Quiz has been created',
         type: 'success',

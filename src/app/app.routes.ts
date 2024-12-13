@@ -3,12 +3,17 @@ import { AuthService } from './core/auth/services/auth.service';
 import { inject } from '@angular/core';
 import { AuthGuard } from './core/auth/guards/auth.guard';
 import { TutorGuard } from './core/auth/guards/tutor.guard';
+import { HomeComponent } from './core/layout/home/home.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'quizzes',
+    redirectTo: 'home',
     pathMatch: 'full',
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
   },
   {
     path: 'auth',
