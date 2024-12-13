@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthService } from './core/auth/services/auth.service';
 import { inject } from '@angular/core';
 import { AuthGuard } from './core/auth/guards/auth.guard';
+import { TutorGuard } from './core/auth/guards/tutor.guard';
 
 export const routes: Routes = [
   {
@@ -16,14 +17,14 @@ export const routes: Routes = [
         path: 'signin',
         loadComponent: () =>
           import('./core/auth/components/auth-page/auth-page.component').then(
-            (m) => m.AuthPageComponent
+            (m) => m.AuthPageComponent,
           ),
       },
       {
         path: 'signup',
         loadComponent: () =>
           import('./core/auth/components/auth-page/auth-page.component').then(
-            (m) => m.AuthPageComponent
+            (m) => m.AuthPageComponent,
           ),
       },
     ],
@@ -40,6 +41,14 @@ export const routes: Routes = [
           ).then((m) => m.QuizListComponent),
       },
       {
+        path: 'create',
+        loadComponent: () =>
+          import(
+            './features/quiz/components/quiz-edit/quiz-edit.component'
+          ).then((m) => m.QuizEditComponent),
+        canActivate: [AuthGuard, TutorGuard],
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import(
@@ -54,6 +63,14 @@ export const routes: Routes = [
             './features/quiz/components/quiz-taker/quiz-taker.component'
           ).then((m) => m.QuizTakerComponent),
         canActivate: [AuthGuard],
+      },
+      {
+        path: ':id/edit',
+        loadComponent: () =>
+          import(
+            './features/quiz/components/quiz-edit/quiz-edit.component'
+          ).then((m) => m.QuizEditComponent),
+        canActivate: [AuthGuard, TutorGuard],
       },
     ],
   },

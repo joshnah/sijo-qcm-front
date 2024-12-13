@@ -14,35 +14,34 @@ import {
 })
 export class QuizService {
   http = inject(HttpClient);
-  constructor() {}
   quizzesSignal = signal<Quiz[]>([]);
   quizzes = this.quizzesSignal.asReadonly();
 
   submit(
     answers: QuizAnswer,
-    quizId: string
+    quizId: string,
   ): Observable<SubmissionConfirmation> {
-    const serializedAnswers = Object.fromEntries(
-      Object.entries(answers).map(([key, value]) => [key, Array.from(value)])
-    );
-    return this.http
-      .post<SubmissionConfirmation>('/submissions', {
-        answers: serializedAnswers,
-        quizId,
-      })
-      .pipe(
-        catchError((err) => {
-          throw 'Error while fetching /submissions: ' + err;
-        })
-      );
+    return this.http.post<SubmissionConfirmation>('/submissions', {
+      answers: this.getSerializedAnswers(answers),
+      quizId,
+    });
   }
 
-  fetchQuizzes(): Observable<Quiz[]> {
-    return this.http.get<Quiz[]>('/quizzes').pipe(
-      tap((quizzes) => {
-        this.quizzesSignal.set(quizzes);
-      })
-    );
+  fetchQuizzes(): void {
+    this.http
+      .get<Quiz[]>('/quizzes')
+      .pipe(
+        tap((quizzes) => {
+          this.quizzesSignal.set(quizzes);
+        }),
+      )
+      .subscribe({
+        error: (err) => console.error('Error loading quizzes:', err),
+      });
+  }
+
+  fetchFullQuizById(quizId: string): Observable<Quiz> {
+    return this.http.get<Quiz>(`/quizzes/${quizId}`);
   }
 
   fetchQuizInfo(quizId: string): Observable<Quiz> {
@@ -50,49 +49,28 @@ export class QuizService {
     if (quiz) {
       return of(quiz);
     }
-    return this.http.get<Quiz>(`/quizzes/${quizId}?type=info`).pipe(
-      catchError((err) => {
-        console.error('Error while fetching quiz info:', err);
-        return throwError(
-          () => new Error('Error while fetching quiz info: ' + err)
-        );
-      })
-    );
+    return this.http.get<Quiz>(`/quizzes/${quizId}?type=info`);
   }
 
   fetchQuizWithQuestions(quizId: string): Observable<Quiz> {
-    return this.http.get<Quiz>(`/quizzes/${quizId}?type=questions`).pipe(
-      catchError((err) => {
-        console.error('Error while fetching quiz questions:', err);
-        return throwError(
-          () => new Error('Error while fetching quiz questions: ' + err)
-        );
-      })
-    );
+    return this.http.get<Quiz>(`/quizzes/${quizId}?type=questions`);
   }
 
-  fetchSubmission(submissionId: String): Observable<Submission> {
-    return this.http.get<any>(`/submissions/${submissionId}`).pipe(
-      map((submission) => {
-        submission.answers = this.transformToQuizAnswer(submission.answers);
-        submission.correctAnswers = this.transformToQuizAnswer(
-          submission.correctAnswers
-        );
-        return submission;
-      }),
-      catchError((err) => {
-        throw 'Error while fetching /submissions ' + err;
-      })
-    );
+  createQuiz(quiz: Quiz): Observable<Quiz> {
+    return this.http.post<Quiz>('/quizzes', quiz);
   }
 
-  private transformToQuizAnswer(input: Record<string, string[]>): QuizAnswer {
-    const quizAnswer: QuizAnswer = {};
+  updateQuiz(quiz: Quiz): Observable<Quiz> {
+    return this.http.put<Quiz>(`/quizzes/${quiz._id}`, quiz);
+  }
 
-    for (const [questionId, answers] of Object.entries(input)) {
-      quizAnswer[questionId] = new Set(answers);
-    }
+  deleteQuiz(quiz: Quiz): Observable<any> {
+    return this.http.delete(`/quizzes/${quiz._id}`);
+  }
 
-    return quizAnswer;
+  private getSerializedAnswers(answers: QuizAnswer) {
+    return Object.fromEntries(
+      Object.entries(answers).map(([key, value]) => [key, Array.from(value)]),
+    );
   }
 }

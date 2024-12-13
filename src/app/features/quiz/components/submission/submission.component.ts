@@ -10,8 +10,9 @@ import {
 import { Quiz } from '../../../../shared/models/quiz.model';
 import { QuizService } from '../../services/quiz.service';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 import { Submission } from '../../../../shared/models/submission.model';
+import { SubmissionService } from '../../services/submission.service';
 
 @Component({
   selector: 'app-submission',
@@ -21,6 +22,7 @@ import { Submission } from '../../../../shared/models/submission.model';
   styleUrl: './submission.component.css',
 })
 export class SubmissionComponent implements OnInit {
+  submissionService = inject(SubmissionService);
   quizService = inject(QuizService);
   route = inject(ActivatedRoute);
   quiz!: Quiz;
@@ -30,14 +32,7 @@ export class SubmissionComponent implements OnInit {
   ngOnInit(): void {
     const submissionId = this.route.snapshot.paramMap.get('id');
     if (submissionId) {
-      this.quizService.fetchSubmission(submissionId).subscribe((submission) => {
-        this.submission = submission;
-        this.quizService.fetchQuizWithQuestions(submission.quizId).subscribe((quiz:Quiz)=>{
-          this.quiz = quiz;
-          this.loading.set(false)
-        })
-      });
-
+      this.loadSubmissionAndQuiz(submissionId);
     }
   }
   isAnswerselected(questionId: string, answerId: string) {
@@ -47,12 +42,33 @@ export class SubmissionComponent implements OnInit {
     return this.submission?.correctAnswers[questionId].has(answerId);
   }
 
-  getScore(){
-    return this.submission.score * 100;  
+  getScore() {
+    return this.submission.score * 100;
   }
 
-  getDetailScore(){
-    const nbCorrect = this.submission.score * this.quiz.questions.length
-    return `${nbCorrect} / ${this.quiz.questions.length}`
+  getDetailScore() {
+    const nbCorrect = this.submission.score * this.quiz.questions.length;
+    return `${nbCorrect} / ${this.quiz.questions.length}`;
+  }
+
+  private loadSubmissionAndQuiz(submissionId: string): void {
+    this.submissionService
+      .fetchSubmission(submissionId)
+      .pipe(
+        switchMap((submission) => {
+          this.submission = submission;
+          return this.quizService.fetchQuizWithQuestions(submission.quizId);
+        }),
+      )
+      .subscribe({
+        next: (quiz: Quiz) => {
+          this.quiz = quiz;
+          this.loading.set(false);
+        },
+        error: (error) => {
+          console.error('Error loading submission or quiz:', error);
+          this.loading.set(false); // Handle error by updating the loading state
+        },
+      });
   }
 }

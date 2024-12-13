@@ -3,9 +3,8 @@ import { Submission } from '../../../shared/models/submission.model';
 
 export const MockQuiz: Quiz = {
   _id: '%s',
-  title: "Questions d'entretien Java %s",
-  explanation:
-    "Ce quiz teste vos connaissances sur les concepts fondamentaux de Java, souvent posés lors des entretiens d'embauche.",
+  title: 'This is an example',
+  explanation: 'Example',
   category: 'Java',
   questions: [
     {
@@ -21,20 +20,18 @@ export const MockQuiz: Quiz = {
   ],
 };
 
-
 export const mockSubmission: Submission = {
-  id: "submission-12345",
+  id: 'submission-12345',
   answers: {
-      "q1": new Set(["A"]),
-      "q2": new Set(["B", "C"]),
-      "q3": new Set(["D"]),
+    q1: new Set(['A']),
+    q2: new Set(['B', 'C']),
+    q3: new Set(['D']),
   },
-  quizId: "quiz-67890",
+  quizId: 'quiz-67890',
   correctAnswers: {
-      "q1": new Set(["A"]),
-      "q2": new Set(["B", "C"]),
-      "q3": new Set(["D"]),
+    q1: new Set(['A']),
+    q2: new Set(['B', 'C']),
+    q3: new Set(['D']),
   },
   score: 100, // Assuming a full score for this mock
 };
-
