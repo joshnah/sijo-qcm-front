@@ -12,11 +12,12 @@ import { Quiz } from '../../../../shared/models/quiz.model';
 import { FormsModule } from '@angular/forms';
 import { AlertService } from '../../../../core/alert/services/alert.service';
 import { MockQuiz } from '../../mocks/quiz.mock';
+import { NgbNavChangeEvent, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-quiz-edit',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgbNavModule],
   templateUrl: './quiz-edit.component.html',
   styleUrl: './quiz-edit.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,20 +27,18 @@ export class QuizEditComponent implements OnInit {
   private router = inject(Router);
   private quizService = inject(QuizService);
   private alertService = inject(AlertService);
-  isEditing = false;
 
   quiz = signal<Quiz | null>(null);
   jsonQuiz = signal('');
+  private quizBase?: Quiz;
 
   ngOnInit(): void {
     const quizId = this.route.snapshot.paramMap.get('id');
     if (quizId) {
       this.fetchQuiz(quizId);
-      this.isEditing = true;
     } else {
-      const { _id, ...emptyQuiz } = MockQuiz;
+      const { _id, ...emptyQuiz } = JSON.parse(JSON.stringify(MockQuiz));
       this.quiz.set(emptyQuiz);
-      this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
     }
   }
 
@@ -49,7 +48,6 @@ export class QuizEditComponent implements OnInit {
       this.quizService.updateQuiz(quiz).subscribe({
         next: (quiz) => {
           this.quiz.set(quiz);
-          this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
           this.alertService.setMessage({
             message: 'Quiz has been updated',
             type: 'success',
@@ -71,7 +69,10 @@ export class QuizEditComponent implements OnInit {
   }
 
   reset(): void {
-    this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
+    if (this.quizBase) {
+      this.quiz.set(JSON.parse(JSON.stringify(this.quizBase)));
+      this.jsonQuiz.set(JSON.stringify(this.quizBase, null, 2));
+    }
   }
 
   delete(): void {
@@ -96,8 +97,89 @@ export class QuizEditComponent implements OnInit {
 
   fetchQuiz(quizId: string) {
     this.quizService.fetchFullQuizById(quizId).subscribe((quiz) => {
-      this.quiz.set(quiz);
-      this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
+      if (quiz) {
+        this.quizBase = JSON.parse(JSON.stringify(quiz));
+        this.quiz.set(JSON.parse(JSON.stringify(quiz)));
+        this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
+      }
     });
+  }
+
+  checkJson() {
+    try {
+      this.quiz.set(JSON.parse(this.jsonQuiz()));
+    } catch (error) {
+      this.alertService.setMessage({
+        message: 'Invalid JSON format. Please correct it.',
+        type: 'danger',
+      });
+      return false;
+    }
+    return true;
+  }
+
+  addQuestion(): void {
+    this.quiz.update((quiz) => {
+      const newId = `q${(quiz?.questions.length || 0) + 1}`;
+      quiz?.questions.push({
+        id: newId,
+        text: 'Text sample',
+        answers: [
+          { id: 'a1', option: 'option 1', isCorrect: true },
+          { id: 'a2', option: 'option 2' },
+          { id: 'a3', option: 'option 3' },
+        ],
+      });
+      return quiz;
+    });
+  }
+
+  addAnswer(idxQuestion: number) {
+    this.quiz.update((quiz) => {
+      quiz?.questions[idxQuestion].answers.push({
+        id: `a${quiz?.questions[idxQuestion].answers.length + 1}`,
+        option: 'new option',
+      });
+      ``;
+      return quiz;
+    });
+  }
+
+  deleteAnswer(questionIndex: number, answerIndex: number) {
+    this.quiz.update((quiz) => {
+      const answers = quiz?.questions[questionIndex].answers;
+      answers?.splice(answerIndex, 1);
+
+      answers?.forEach((answer, idx) => {
+        answer.id = `a${idx + 1}`;
+      });
+
+      return quiz;
+    });
+  }
+  deleteQuestion(questionIndex: number) {
+    this.quiz.update((quiz) => {
+      const questions = quiz?.questions;
+      questions?.splice(questionIndex, 1);
+
+      // Re-align question IDs and their answers' IDs
+      questions?.forEach((question, qIdx) => {
+        question.id = `q${qIdx + 1}`;
+      });
+
+      return quiz;
+    });
+  }
+  onTabChange(event: NgbNavChangeEvent): void {
+    // Change from json to form
+    if (event.nextId === 1 && !this.checkJson()) {
+      event.preventDefault();
+    } else {
+      // From form to Json
+      this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
+    }
+  }
+  get isEditing() {
+    return !!this.route.snapshot.paramMap.get('id');
   }
 }
