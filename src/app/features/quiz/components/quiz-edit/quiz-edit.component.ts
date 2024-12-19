@@ -43,29 +43,25 @@ export class QuizEditComponent implements OnInit {
   }
 
   save(): void {
-    try {
-      const quiz = JSON.parse(this.jsonQuiz());
-      this.quizService.updateQuiz(quiz).subscribe({
-        next: (quiz) => {
-          this.quiz.set(quiz);
-          this.alertService.setMessage({
-            message: 'Quiz has been updated',
-            type: 'success',
-          });
-        },
-        error: (err) => {
-          this.alertService.setMessage({
-            message: `Error while updating quiz:  ${err?.description}`,
-            type: 'danger',
-          });
-        },
-      });
-    } catch (error) {
-      this.alertService.setMessage({
-        message: 'Invalid JSON format. Please correct it.',
-        type: 'danger',
-      });
+    if (!this.quiz()) {
+      return;
     }
+
+    this.quizService.updateQuiz(this.quiz()!).subscribe({
+      next: (quiz) => {
+        this.quiz.set(quiz);
+        this.alertService.setMessage({
+          message: 'Quiz has been updated',
+          type: 'success',
+        });
+      },
+      error: (err) => {
+        this.alertService.setMessage({
+          message: `Error while updating quiz:  ${err?.description}`,
+          type: 'danger',
+        });
+      },
+    });
   }
 
   reset(): void {
