@@ -13,11 +13,11 @@ import { FormsModule } from '@angular/forms';
 import { AlertService } from '../../../../core/alert/services/alert.service';
 import { MockQuiz } from '../../mocks/quiz.mock';
 import { NgbNavChangeEvent, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { EditorComponent } from 'ngx-monaco-editor-v2';
 @Component({
   selector: 'app-quiz-edit',
   standalone: true,
-  imports: [FormsModule, NgbNavModule],
+  imports: [FormsModule, NgbNavModule, EditorComponent],
   templateUrl: './quiz-edit.component.html',
   styleUrl: './quiz-edit.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +31,16 @@ export class QuizEditComponent implements OnInit {
   quiz = signal<Quiz | null>(null);
   jsonQuiz = signal('');
   private quizBase?: Quiz;
+  editorOptions = {
+    language: 'json',
+    scrollBeyondLastLine: false,
+    lineHeight: 20,
+    fontSize: 14,
+    wordWrap: 'on',
+    wrappingIndent: 'indent',
+    theme: 'customTheme',
+    automaticLayout: true, // Ajuste automatiquement la taille de l'éditeur
+  };
 
   ngOnInit(): void {
     const quizId = this.route.snapshot.paramMap.get('id');

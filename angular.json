@@ -21,12 +21,20 @@
             "outputPath": "dist/sijo-qcm-front",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": ["zone.js", "@angular/localize/init"],
+            "polyfills": [
+              "zone.js",
+              "@angular/localize/init"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/monaco-editor/",
+                "output": "/assets/monaco/"
               }
             ],
             "styles": [
@@ -96,7 +104,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": []
           }
         }

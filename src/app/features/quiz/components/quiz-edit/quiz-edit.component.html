@@ -141,13 +141,14 @@
       <li [ngbNavItem]="2">
         <a ngbNavLink>JSON Editor</a>
         <ng-template ngbNavContent>
-          <!-- JSON Editor -->
-          <textarea
-            class="form-control"
-            rows="15"
-            [(ngModel)]="jsonQuiz"
-            placeholder="Edit your quiz JSON here"
-          ></textarea>
+          <div class="editor-container">
+            <ngx-monaco-editor
+              class="json-editor"
+              [(ngModel)]="jsonQuiz"
+              [options]="editorOptions"
+              aria-label="JSON Quiz Editor"
+            ></ngx-monaco-editor>
+          </div>
           <button class="mt-3 btn btn-primary" (click)="checkJson()">
             Check JSON
           </button>

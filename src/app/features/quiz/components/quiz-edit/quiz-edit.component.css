@@ -1,13 +1,22 @@
+.editor-container {
+  height: calc(100vh - 300px); /* Exemple : hauteur dynamique */
+}
+
+.json-editor {
+  height: 100%;
+  width: 100%;
+  display: block; /* Pour s'assurer que l'éditeur occupe tout l'espace */
+}
 .larger-checkbox {
     width: 1.5em;
     height: 1.5em;
     margin-right: 0.5em;
     cursor: pointer;
   }
-  
+
   .form-check-label {
     font-size: 1rem;
     margin-left: 0.2em;
     cursor: pointer;
   }
-  
+
