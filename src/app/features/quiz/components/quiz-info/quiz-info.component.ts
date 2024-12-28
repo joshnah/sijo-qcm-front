@@ -13,12 +13,11 @@ import { combineLatest } from 'rxjs';
 import { Submission } from '../../../../shared/models/submission.model';
 
 @Component({
-  selector: 'app-quiz-info',
-  standalone: true,
-  imports: [QuizHistoryComponent],
-  templateUrl: './quiz-info.component.html',
-  styleUrl: './quiz-info.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-quiz-info',
+    imports: [QuizHistoryComponent],
+    templateUrl: './quiz-info.component.html',
+    styleUrl: './quiz-info.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuizInfoComponent {
   quiz!: Quiz;

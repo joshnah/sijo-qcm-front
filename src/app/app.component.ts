@@ -5,11 +5,10 @@ import { FooterComponent } from "./core/layout/footer/footer.component";
 import { AlertComponent } from './core/alert/components/alert/alert.component';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, AlertComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    imports: [RouterOutlet, HeaderComponent, FooterComponent, AlertComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'sijo-qcm-front';

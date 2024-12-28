@@ -15,12 +15,11 @@ import { Quiz } from '../../../../shared/models/quiz.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-quiz-taker',
-  standalone: true,
-  imports: [CommonModule, QuestionsContainerComponent],
-  templateUrl: './quiz-taker.component.html',
-  styleUrls: ['./quiz-taker.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-quiz-taker',
+    imports: [CommonModule, QuestionsContainerComponent],
+    templateUrl: './quiz-taker.component.html',
+    styleUrls: ['./quiz-taker.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuizTakerComponent implements OnInit {
   quiz = signal<Quiz | null>(null);

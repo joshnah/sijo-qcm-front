@@ -15,11 +15,10 @@ import { Submission } from '../../../../shared/models/submission.model';
 import { SubmissionService } from '../../services/submission.service';
 
 @Component({
-  selector: 'app-submission',
-  standalone: true,
-  imports: [],
-  templateUrl: './submission.component.html',
-  styleUrl: './submission.component.css',
+    selector: 'app-submission',
+    imports: [],
+    templateUrl: './submission.component.html',
+    styleUrl: './submission.component.css'
 })
 export class SubmissionComponent implements OnInit {
   submissionService = inject(SubmissionService);

@@ -18,12 +18,11 @@ import { Router } from '@angular/router';
 import { SubmissionConfirmation } from '../../../../shared/models/submission.model';
 
 @Component({
-  selector: 'app-questions-container',
-  standalone: true,
-  imports: [],
-  templateUrl: './questions-container.component.html',
-  styleUrl: './questions-container.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-questions-container',
+    imports: [],
+    templateUrl: './questions-container.component.html',
+    styleUrl: './questions-container.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestionsContainerComponent implements OnInit {
   quiz = input.required<Quiz>();

@@ -11,11 +11,10 @@ import { AuthService } from '../../services/auth.service';
 import { Credentials } from '../../models/credentials.model';
 
 @Component({
-  selector: 'app-auth-page',
-  standalone: true,
-  templateUrl: './auth-page.component.html',
-  styleUrl: './auth-page.component.css',
-  imports: [FormsModule, RouterLink, RouterLinkActive],
+    selector: 'app-auth-page',
+    templateUrl: './auth-page.component.html',
+    styleUrl: './auth-page.component.css',
+    imports: [FormsModule, RouterLink, RouterLinkActive]
 })
 export class AuthPageComponent implements OnInit {
   authService = inject(AuthService);

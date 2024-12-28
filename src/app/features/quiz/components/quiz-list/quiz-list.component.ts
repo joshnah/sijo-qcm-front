@@ -11,12 +11,11 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/services/auth.service';
 
 @Component({
-  selector: 'app-quiz-list',
-  standalone: true,
-  imports: [RouterLink],
-  templateUrl: './quiz-list.component.html',
-  styleUrl: './quiz-list.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-quiz-list',
+    imports: [RouterLink],
+    templateUrl: './quiz-list.component.html',
+    styleUrl: './quiz-list.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuizListComponent implements OnInit {
   private quizService = inject(QuizService);

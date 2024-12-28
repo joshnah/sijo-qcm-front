@@ -15,12 +15,11 @@ import { MockQuiz } from '../../mocks/quiz.mock';
 import { NgbNavChangeEvent, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
 @Component({
-  selector: 'app-quiz-edit',
-  standalone: true,
-  imports: [FormsModule, NgbNavModule, EditorComponent],
-  templateUrl: './quiz-edit.component.html',
-  styleUrl: './quiz-edit.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-quiz-edit',
+    imports: [FormsModule, NgbNavModule, EditorComponent],
+    templateUrl: './quiz-edit.component.html',
+    styleUrl: './quiz-edit.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuizEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
