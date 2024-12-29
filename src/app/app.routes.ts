@@ -92,4 +92,24 @@ export const routes: Routes = [
     ],
     canActivate: [AuthGuard],
   },
+  {
+    path: 'coding-questions',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            './features/coding-questions/components/coding-questions-list/coding-questions-list.component'
+          ).then((m) => m.CodingQuestionsListComponent),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import(
+            './features/coding-questions/components/coding-question-start/coding-question-start.component'
+          ).then((m) => m.CodingQuestionStartComponent),
+      },
+    ],
+    canActivate: [AuthGuard],
+  },
 ];

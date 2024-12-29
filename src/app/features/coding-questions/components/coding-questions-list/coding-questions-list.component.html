@@ -1,0 +1,29 @@
+<div
+  class="d-flex justify-content-center align-items-center container flex-column gap-3"
+>
+  @let codingQuestions = codingQuestionsService.codingQuestions();
+
+  <!-- Display List of Available Quizzes -->
+  @if (!!codingQuestions) {
+    <h2 class="mb-3">Available Quizzes</h2>
+    <ul class="list-group w-100">
+      @for (codingQuestion of codingQuestions; track codingQuestion.id) {
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center p-3"
+        >
+          <div>
+            <h5 class="mb-1">{{ codingQuestion.title }}</h5>
+          </div>
+          <div class="btn-group" role="group">
+            <button
+              class="btn btn-outline-primary btn-sm"
+              [routerLink]="['/coding-questions', codingQuestion.id]"
+            >
+              Start
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>
