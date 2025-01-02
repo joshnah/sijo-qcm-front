@@ -16,12 +16,16 @@ import {
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodingSubmissionsListComponent } from '../coding-submissions-list/coding-submissions-list.component';
 import { CodingSubmissionDetailsComponent } from '../coding-submission-details/coding-submission-details.component';
+import { AlertService } from '../../../../core/alert/services/alert.service';
+import { CodeRunComponent } from '../code-run/code-run.component';
+import { JavaCodeGenerator } from '../../codeGenerators/java.generator';
 
 @Component({
   selector: 'app-coding-question-start',
   standalone: true,
   imports: [
     EditorComponent,
+    CodeRunComponent,
     FormsModule,
     NgbNavModule,
     CodingSubmissionsListComponent,
@@ -33,9 +37,10 @@ import { CodingSubmissionDetailsComponent } from '../coding-submission-details/c
 })
 export class CodingQuestionStartComponent implements OnInit {
   codingQuestionsService = inject(CodingQuestionsService);
+  alertService = inject(AlertService);
   codingQuestion = signal<CodingQuestion | null>(null);
   active = 'description';
-  currentSubmission?: CodingSubmission;
+  currentSubmission = signal<CodingSubmission | null>(null);
   private route = inject(ActivatedRoute);
   ngOnInit(): void {
     const questionId = this.route.snapshot.paramMap.get('id');
@@ -56,54 +61,40 @@ export class CodingQuestionStartComponent implements OnInit {
   // Placeholder for the submission logic
   submitSolution() {
     if (this.codingQuestion) {
-      this.codingQuestionsService.submitCodingQuestion(
-        this.codingQuestion()!.id,
-        'java',
-        this.code,
-      );
+      this.codingQuestionsService
+        .submitCodingQuestion(this.codingQuestion()!.id, 'java', this.code)
+        .subscribe({
+          next: (codingSubmission: CodingSubmission) => {
+            this.alertService.setMessage({
+              type: 'success',
+              message: 'Code has been submitted',
+            });
+            this.selectSubmission(codingSubmission);
+          },
+        });
     }
   }
 
   selectSubmission(submission: CodingSubmission) {
-    this.currentSubmission = submission;
-    this.active = 'submission-detail';
+    this.currentSubmission.set(submission);
+    this.navigateToSubmissionTab();
   }
+
   generateFunctionTemplate(
     codingQuestion: CodingQuestion,
     language: string,
   ): string {
-    const { functionName, functionSignatures } = codingQuestion;
-    const signature = functionSignatures.find(
+    const signature = codingQuestion.functionSignatures.find(
       (sig) => sig.language.toLowerCase() === language.toLowerCase(),
     );
 
     if (!signature) {
       throw new Error(`Function signature not found for language: ${language}`);
     }
+    return JavaCodeGenerator.generateJavaCode(codingQuestion, signature);
+  }
 
-    const { arguments: args, returnType } = signature;
-
-    if (language.toLowerCase() === 'java') {
-      // Java Function Template
-      const argsList = args.map((arg) => `${arg.type} ${arg.name}`).join(', ');
-      return `
-public class Solution {
-    public ${returnType} ${functionName}(${argsList}) {
-        // TODO: Implement this function
-        return null; // Replace with appropriate return value
-    }
-}`;
-    } else if (language.toLowerCase() === 'python') {
-      // Python Function Template
-      const argsList = args.map((arg) => arg.name).join(', ');
-      return `
-def ${functionName}(${argsList}) -> ${returnType}:
-    """
-    TODO: Implement this function
-    """
-    pass  # Replace with appropriate logic`;
-    }
-
-    throw new Error(`Unsupported language: ${language}`);
+  private navigateToSubmissionTab() {
+    this.active = 'submission-detail';
   }
 }

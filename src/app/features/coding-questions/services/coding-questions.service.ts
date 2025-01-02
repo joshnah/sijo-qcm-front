@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import {
+  CodeExecution,
+  CodeExecutionResult,
   CodingQuestion,
   CodingSubmission,
 } from '../../../shared/models/codingQuestion.model';
@@ -40,14 +42,16 @@ export class CodingQuestionsService {
     );
   }
 
-  submitCodingQuestion(questionId: string, language: string, userCode: string) {
-    this.http
-      .post('/coding-questions', {
-        questionId,
-        language,
-        userCode,
-      })
-      .subscribe((a) => console.log(a));
+  submitCodingQuestion(
+    questionId: string,
+    language: string,
+    userCode: string,
+  ): Observable<CodingSubmission> {
+    return this.http.post<CodingSubmission>('/coding-questions', {
+      questionId,
+      language,
+      userCode,
+    });
   }
 
   fetchAllSubmissionsByQuestion(
@@ -56,5 +60,21 @@ export class CodingQuestionsService {
     return this.http.get<CodingSubmission[]>(
       `/coding-questions/${codingQuestionId}/submissions`,
     );
+  }
+  fetchCodeSubmission(submissionId: String): Observable<CodingSubmission> {
+    return this.http.get<CodingSubmission>(
+      `/coding-questions/submissions/${submissionId}`,
+    );
+  }
+  executeCode(
+    code: string,
+    language: string,
+    input: string,
+  ): Observable<CodeExecutionResult> {
+    return this.http.post<CodeExecutionResult>('/coding-questions/execute', {
+      code,
+      language,
+      input,
+    } as CodeExecution);
   }
 }

@@ -33,3 +33,23 @@ export interface CodingSubmission {
   date: string; // ISO 8601 formatted date
   score: number; // e.g., 90/100
 }
+export interface CodeExecution {
+  code: string;
+  input: string;
+  language: string;
+}
+
+export interface Status {
+  id: number;
+  description: string;
+}
+
+export interface CodeExecutionResult {
+  stdout?: string;
+  time?: string;
+  memory?: string;
+  stderr?: string;
+  compile_output?: string;
+  message?: string;
+  status?: Status;
+}

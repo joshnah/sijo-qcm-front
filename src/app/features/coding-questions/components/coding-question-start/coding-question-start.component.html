@@ -1,9 +1,9 @@
 @let question = codingQuestion();
 @if (question) {
-  <div class="container-fluid vh-100 d-flex flex-column">
-    <div class="row flex-grow-1">
+  <div class="container-fluid h-100 flex-grow-1 d-flex flex-column">
+    <div class="row flex-grow-1 overflow-hidden">
       <!-- Left Panel: Question Description -->
-      <div class="col-md-6 bg-light overflow-auto p-3">
+      <div class="col-md-6 bg-light overflow-auto p-3 mh-100">
         <ul
           [destroyOnHide]="false"
           ngbNav
@@ -35,7 +35,7 @@
             <button ngbNavLink>Submissions</button>
             <ng-template ngbNavContent>
               <app-coding-submission-details
-                [submissionInput]="currentSubmission"
+                [submissionInput]="currentSubmission()!"
               ></app-coding-submission-details>
             </ng-template>
           </li>
@@ -45,7 +45,7 @@
       </div>
 
       <!-- Right Panel: Code Editor -->
-      <div class="col-md-6 d-flex flex-column">
+      <div class="col-md-6 d-flex flex-column overflow-hidden">
         <!-- Submit Button -->
         <div
           class="bg-dark text-white p-3 d-flex align-items-center justify-content-between"
@@ -57,7 +57,7 @@
         </div>
 
         <!-- Monaco Editor -->
-        <div class="flex-grow-1 overflow-hidden">
+        <div class="flex-grow-1 h-50 overflow-auto">
           <ngx-monaco-editor
             [options]="editorOptions"
             [(ngModel)]="code"
@@ -65,6 +65,9 @@
           >
           </ngx-monaco-editor>
         </div>
+
+        <!-- Input for Test Case & Run Button -->
+        <app-code-run class="flex-grow-1" [code]="code"></app-code-run>
       </div>
     </div>
   </div>
