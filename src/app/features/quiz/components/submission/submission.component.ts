@@ -1,24 +1,16 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { Quiz } from '../../../../shared/models/quiz.model';
-import { QuizService } from '../../services/quiz.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, switchMap } from 'rxjs';
+import { switchMap } from 'rxjs';
+import { Quiz } from '../../../../shared/models/quiz.model';
 import { Submission } from '../../../../shared/models/submission.model';
+import { QuizService } from '../../services/quiz.service';
 import { SubmissionService } from '../../services/submission.service';
 
 @Component({
-    selector: 'app-submission',
-    imports: [],
-    templateUrl: './submission.component.html',
-    styleUrl: './submission.component.css'
+  selector: 'app-submission',
+  imports: [],
+  templateUrl: './submission.component.html',
+  styleUrl: './submission.component.css',
 })
 export class SubmissionComponent implements OnInit {
   submissionService = inject(SubmissionService);

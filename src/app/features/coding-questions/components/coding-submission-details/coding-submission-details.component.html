@@ -14,18 +14,14 @@
               Submission ID: {{ submission.codingSubmissionId }}
             </h5>
 
-            <!-- Status and Date -->
-            <div class="mb-3">
-              <strong>Status:</strong> {{ submission.status }}
-            </div>
             <div class="mb-3">
               <strong>Submitted on:</strong>
-              {{ submission.date | date: "medium" }}
+              {{ submission.createdAt | date: "medium" }}
             </div>
 
             <!-- Score and Language -->
             <div class="mb-3">
-              <strong>Score:</strong> {{ submission.score }}/100
+              <strong>Score:</strong> {{ submission.score * 100 }}/100
             </div>
             <div class="mb-3">
               <strong>Language:</strong> {{ submission.language }}

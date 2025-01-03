@@ -29,8 +29,7 @@ export interface CodingSubmission {
   userCode: string;
   language: string;
   userId: string;
-  status: string; // e.g., "Accepted", "Wrong Answer", etc.
-  date: string; // ISO 8601 formatted date
+  createdAt: string; // ISO 8601 formatted date
   score: number; // e.g., 90/100
 }
 export interface CodeExecution {
