@@ -23,7 +23,7 @@ export class CodeRunComponent {
   output = signal<CodeExecutionResult | null>(null);
   stdin = '';
   loading = signal(false);
-
+  inputPlaceholder = input<string>();
   executeCode() {
     this.loading.set(true);
     this.codingQuestionsService

@@ -1,80 +1,81 @@
 @let question = codingQuestion();
 @if (question) {
-  <div class="container-fluid h-100 flex-grow-1 d-flex flex-column">
-    <div class="row flex-grow-1 overflow-hidden">
-      <!-- Left Panel: Question Description -->
-      <div class="col-md-6 bg-light overflow-auto p-3 mh-100">
-        <ul
-          [destroyOnHide]="false"
-          ngbNav
-          #nav="ngbNav"
-          [(activeId)]="active"
-          class="nav-tabs"
-        >
-          <li ngbNavItem="description">
-            <button ngbNavLink>Description</button>
-            <ng-template ngbNavContent>
-              <h2 class="mb-3">{{ question.title }}</h2>
-              <div class="card">
-                <div class="card-body">
-                  <p class="mb-0">{{ question.description }}</p>
-                </div>
+  <div class="container-fluid h-100 row">
+    <!-- Left Panel: Question Description -->
+    <div class="col-md-6 bg-light overflow-auto">
+      <ul
+        [destroyOnHide]="false"
+        ngbNav
+        #nav="ngbNav"
+        [(activeId)]="active"
+        class="nav-tabs"
+      >
+        <li ngbNavItem="description">
+          <button ngbNavLink>Description</button>
+          <ng-template ngbNavContent>
+            <h2 class="mb-3">{{ question.title }}</h2>
+            <div class="card">
+              <div class="card-body">
+                <p class="mb-0">{{ question.description }}</p>
               </div>
-            </ng-template>
-          </li>
-          <li ngbNavItem="submissions-list">
-            <button ngbNavLink>History</button>
-            <ng-template ngbNavContent>
-              <app-coding-submissions-list
-                [questionId]="question.id"
-                (submissionSelected)="selectSubmission($event)"
-              ></app-coding-submissions-list>
-            </ng-template>
-          </li>
-          <li ngbNavItem="submission-detail">
-            <button ngbNavLink>Submissions</button>
-            <ng-template ngbNavContent>
-              <app-coding-submission-details
-                [submissionInput]="currentSubmission()!"
-              ></app-coding-submission-details>
-            </ng-template>
-          </li>
-        </ul>
-
-        <div [ngbNavOutlet]="nav" class="mt-2"></div>
-      </div>
-
-      <!-- Right Panel: Code Editor -->
-      <div class="col-md-6 d-flex flex-column overflow-hidden">
-        <!-- Submit Button -->
-        <div
-          class="bg-dark text-white p-3 d-flex align-items-center justify-content-between"
-        >
-          <h5 class="mb-0">Code Editor</h5>
-          @if (this.isSubmitting()) {
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
             </div>
-          } @else {
-            <button class="btn btn-success" (click)="submitSolution()">
-              Submit Solution
-            </button>
-          }
-        </div>
+          </ng-template>
+        </li>
+        <li ngbNavItem="submissions-list">
+          <button ngbNavLink>History</button>
+          <ng-template ngbNavContent>
+            <app-coding-submissions-list
+              [questionId]="question.id"
+              (submissionSelected)="selectSubmission($event)"
+            ></app-coding-submissions-list>
+          </ng-template>
+        </li>
+        <li ngbNavItem="submission-detail">
+          <button ngbNavLink>Submissions</button>
+          <ng-template ngbNavContent>
+            <app-coding-submission-details
+              [submissionInput]="currentSubmission()!"
+            ></app-coding-submission-details>
+          </ng-template>
+        </li>
+      </ul>
 
-        <!-- Monaco Editor -->
-        <div class="flex-grow-1 h-50 overflow-auto">
-          <ngx-monaco-editor
-            [options]="editorOptions"
-            [(ngModel)]="code"
-            class="h-100 w-100"
-          >
-          </ngx-monaco-editor>
-        </div>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
 
-        <!-- Input for Test Case & Run Button -->
-        <app-code-run class="flex-grow-1" [code]="code"></app-code-run>
+    <!-- Right Panel: Code Editor -->
+    <div class="col-md-6 d-flex flex-column overflow-auto">
+      <!-- Submit Button -->
+      <div
+        class="bg-dark text-white p-3 d-flex align-items-center justify-content-between"
+      >
+        <h5 class="mb-0">Code Editor</h5>
+        @if (this.isSubmitting()) {
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        } @else {
+          <button class="btn btn-success" (click)="submitSolution()">
+            Submit Solution
+          </button>
+        }
       </div>
+
+      <!-- Monaco Editor -->
+      <div class="overflow-auto h-50">
+        <ngx-monaco-editor
+          [options]="editorOptions"
+          [(ngModel)]="code"
+          class="h-100 w-100"
+        >
+        </ngx-monaco-editor>
+      </div>
+
+      <!-- Input for Test Case & Run Button -->
+      <app-code-run
+        [code]="code"
+        [inputPlaceholder]="getPlaceholder()"
+      ></app-code-run>
     </div>
   </div>
 }
