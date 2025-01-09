@@ -1,4 +1,3 @@
-
 <div class="d-flex flex-column">
   <header class="bg-primary text-white py-5 text-center">
     <div class="container">
@@ -6,7 +5,18 @@
       <p class="lead">
         The ultimate platform for interactive quizzes and learning fun!
       </p>
-      <button class="btn btn-light btn-lg mt-3" [routerLink]="'/quizzes'">See all quizzes</button>
+      <div class="d-flex justify-content-evenly">
+        <button class="btn btn-light btn-lg mt-3" [routerLink]="'/quizzes'">
+          See all quizzes
+        </button>
+
+        <button
+          class="btn btn-light btn-lg mt-3"
+          [routerLink]="'/coding-questions'"
+        >
+          See all coding questions
+        </button>
+      </div>
     </div>
   </header>
 
@@ -53,5 +63,4 @@
       </div>
     </div>
   </section>
-
 </div>

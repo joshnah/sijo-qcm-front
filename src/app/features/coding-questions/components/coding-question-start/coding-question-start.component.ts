@@ -83,8 +83,8 @@ export class CodingQuestionStartComponent implements OnInit {
     }
   }
 
-  getPlaceholder() {
-    return `${this.codingQuestion()?.testCases[0]?.input}`;
+  createExampleInput() {
+    return this.codingQuestion()?.testCases[0]?.input;
   }
   selectSubmission(submission: CodingSubmission) {
     this.currentSubmission.set(submission);

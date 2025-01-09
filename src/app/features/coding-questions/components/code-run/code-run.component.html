@@ -3,13 +3,13 @@
     <h5 class="mb-3">Test Case Input</h5>
     <div class="form-group">
       <label for="testCaseInput">Enter Test Case Input:</label>
-      <input
-        type="text"
+      <textarea
         class="form-control"
         id="testCaseInput"
-        [placeholder]="inputPlaceholder()"
+        [placeholder]="exampleInput()"
         [(ngModel)]="stdin"
-      />
+        rows="3"
+      ></textarea>
     </div>
     <button class="btn btn-primary mt-3" (click)="executeCode()">
       Run Code

@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { CodingQuestionsService } from '../../services/coding-questions.service';
@@ -19,15 +20,16 @@ import { finalize } from 'rxjs';
 })
 export class CodeRunComponent {
   code = input<string>('');
+  exampleInput = input<string>();
   codingQuestionsService = inject(CodingQuestionsService);
   output = signal<CodeExecutionResult | null>(null);
-  stdin = '';
+  stdin = linkedSignal(() => this.exampleInput());
   loading = signal(false);
-  inputPlaceholder = input<string>();
+
   executeCode() {
     this.loading.set(true);
     this.codingQuestionsService
-      .executeCode(this.code(), 'java', this.stdin)
+      .executeCode(this.code(), 'java', this.stdin()!)
       .pipe(
         finalize(() => {
           this.loading.set(false);

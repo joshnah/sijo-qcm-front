@@ -55,11 +55,13 @@ export class JavaCodeGenerator {
         }
           `;
           break;
-
+        case 'Integer':
         case 'int':
           stdinParser += `        int ${name} = Integer.parseInt(scanner.nextLine().trim());\n`;
           break;
-
+        case 'boolean':
+          stdinParser += `        boolean ${name} = Boolean.parseBoolean(scanner.nextLine().trim());\n`;
+          break;
         case 'String':
           stdinParser += `        String ${name} = scanner.nextLine().trim();\n`;
           break;
@@ -71,7 +73,7 @@ export class JavaCodeGenerator {
         listInputStr = listInputStr.substring(1, listInputStr.length() - 1); // Remove brackets
         if (!listInputStr.isEmpty()) {
             for (String str : listInputStr.split(",")) {
-                ${name}.add(str.trim());
+                ${name}.eadd(str.trim());
             }
         }
           `;
