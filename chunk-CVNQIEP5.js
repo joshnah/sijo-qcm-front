@@ -1,0 +1,1 @@
+import{Pa as s,Y as r}from"./chunk-I64YHXKP.js";var a=class e{alertMessage=s(null);constructor(){}setMessage(t){this.alertMessage.set(t)}deleteMessage(){this.alertMessage.set(null)}static \u0275fac=function(o){return new(o||e)};static \u0275prov=r({token:e,factory:e.\u0275fac,providedIn:"root"})};export{a};
