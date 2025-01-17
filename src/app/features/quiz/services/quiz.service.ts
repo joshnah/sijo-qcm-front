@@ -1,13 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Quiz, QuizAnswer } from '../../../shared/models/quiz.model';
 // import { SampleQuiz } from '../mocks/quiz.mock';
-import { Observable, of, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
-import {
-  Submission,
-  SubmissionConfirmation,
-} from '../../../shared/models/submission.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { SubmissionConfirmation } from '../../../shared/models/submission.model';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +41,12 @@ export class QuizService {
     return this.http.get<Quiz>(`/quizzes/${quizId}`);
   }
 
+  generateQuiz(topics: string, nbQuestions: string) {
+    const params = new HttpParams()
+      .set('topics', topics)
+      .set('nbQuestions', nbQuestions);
+    return this.http.get<Quiz>('/quizzes/generate', { params });
+  }
   fetchQuizInfo(quizId: string): Observable<Quiz> {
     const quiz = this.quizzes().find((quiz) => quiz._id === quizId);
     if (quiz) {

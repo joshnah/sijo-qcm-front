@@ -17,6 +17,7 @@
       ngbNav
       #nav="ngbNav"
       class="nav nav-tabs"
+      [(activeId)]="active"
       (navChange)="onTabChange($event)"
     >
       <li [ngbNavItem]="1">
@@ -154,6 +155,47 @@
           </button>
         </ng-template>
       </li>
+      @if (!isEditing) {
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>AI generator</a>
+
+          <ng-template ngbNavContent>
+            <form (ngSubmit)="generateQuiz(topics.value, nbQuestions.value)">
+              <div class="form-group">
+                <label for="topics">This quiz is about...</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="topics"
+                  aria-describedby="topics"
+                  placeholder="Quiz topics"
+                  value="Java,Python"
+                  #topics
+                />
+              </div>
+              <div class="form-group">
+                <label for="nbQuestions">Number of questions</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="nbQuestions"
+                  placeholder="nbQuestions"
+                  value="5"
+                  #nbQuestions
+                />
+              </div>
+              <button type="submit" class="btn btn-primary mt-3">
+                Generate
+              </button>
+              @if (isGenerating()) {
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              }
+            </form>
+          </ng-template>
+        </li>
+      }
     </ul>
 
     <!-- Render Tabs -->

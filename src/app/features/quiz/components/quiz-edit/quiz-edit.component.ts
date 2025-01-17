@@ -14,12 +14,13 @@ import { AlertService } from '../../../../core/alert/services/alert.service';
 import { MockQuiz } from '../../mocks/quiz.mock';
 import { NgbNavChangeEvent, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
+import { finalize } from 'rxjs';
 @Component({
-    selector: 'app-quiz-edit',
-    imports: [FormsModule, NgbNavModule, EditorComponent],
-    templateUrl: './quiz-edit.component.html',
-    styleUrl: './quiz-edit.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-quiz-edit',
+  imports: [FormsModule, NgbNavModule, EditorComponent],
+  templateUrl: './quiz-edit.component.html',
+  styleUrl: './quiz-edit.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
@@ -27,6 +28,8 @@ export class QuizEditComponent implements OnInit {
   private quizService = inject(QuizService);
   private alertService = inject(AlertService);
 
+  active = signal(1);
+  isGenerating = signal(false);
   quiz = signal<Quiz | null>(null);
   jsonQuiz = signal('');
   private quizBase?: Quiz;
@@ -50,7 +53,24 @@ export class QuizEditComponent implements OnInit {
       this.quiz.set(emptyQuiz);
     }
   }
-
+  generateQuiz(topics: string, nbQuestions: string) {
+    this.isGenerating.set(true);
+    this.quizService
+      .generateQuiz(topics, nbQuestions)
+      .pipe(
+        finalize(() => {
+          this.isGenerating.set(false);
+          this.alertService.setMessage({
+            message: 'Quiz has been generated',
+            type: 'success',
+          });
+        }),
+      )
+      .subscribe((result) => {
+        this.jsonQuiz.set(JSON.stringify(result, null, 2));
+        this.active.set(2);
+      });
+  }
   save(): void {
     if (!this.quiz()) {
       return;
