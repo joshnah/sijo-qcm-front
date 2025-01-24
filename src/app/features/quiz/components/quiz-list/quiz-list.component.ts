@@ -5,21 +5,20 @@ import {
   OnInit,
   Signal,
 } from '@angular/core';
-import { QuizService } from '../../services/quiz.service';
-import { Quiz } from '../../../../shared/models/quiz.model';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/services/auth.service';
+import { Quiz } from '../../../../shared/models/quiz.model';
+import { QuizService } from '../../services/quiz.service';
 
 @Component({
-    selector: 'app-quiz-list',
-    imports: [RouterLink],
-    templateUrl: './quiz-list.component.html',
-    styleUrl: './quiz-list.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-quiz-list',
+  imports: [RouterLink],
+  templateUrl: './quiz-list.component.html',
+  styleUrl: './quiz-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizListComponent implements OnInit {
   private quizService = inject(QuizService);
-  private router = inject(Router);
   private authService = inject(AuthService);
 
   quizzes: Signal<Quiz[]> = this.quizService.quizzesSignal;

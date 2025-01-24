@@ -1,46 +1,54 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, finalize, Observable, of, tap } from 'rxjs';
 
 import { throwError } from 'rxjs';
 import { Credentials } from '../models/credentials.model';
 import { Role, User } from '../models/user.model';
 import { JwtService } from './jwt.service';
 import { AlertService } from '../../alert/services/alert.service';
+import { SpinnerService } from '../../../shared/services/spinner.service';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  
   http = inject(HttpClient);
   jwtService = inject(JwtService);
   router = inject(Router);
   alertService = inject(AlertService);
   isAuthenticated = computed(() => !!this.userSignal());
-  
+  private spinner = inject(SpinnerService);
   private userSignal = signal<User | null>(null);
   user = this.userSignal.asReadonly();
 
-  constructor(){
+  constructor() {
     this.setUserFromLocalStorage();
   }
 
-
   login(credentials: Credentials): Observable<User> {
-    return this.http
-    .post<User>('/auth/signin', credentials)
-    .pipe(
+    this.spinner.openGlobalSpinner();
+    return this.http.post<User>('/auth/signin', credentials).pipe(
+      finalize(() => {
+        this.spinner.closeGlobalSpinner();
+      }),
       tap((loginResponse) => {
-        this.setAuth({ token: loginResponse.token, login: credentials.login, role: loginResponse.role });
+        this.setAuth({
+          token: loginResponse.token,
+          login: credentials.login,
+          role: loginResponse.role,
+        });
       }),
       catchError((error) => {
         console.error('Error occurred:', error);
-  
-        this.alertService.setMessage({ message: "Login failed", type: "danger" });
-  
+
+        this.alertService.setMessage({
+          message: 'Login failed',
+          type: 'danger',
+        });
+
         return throwError(() => new Error('Login failed. Please try again.'));
-      })
+      }),
     );
   }
 
@@ -63,13 +71,13 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  hasTutorAccess():boolean{
-      return this.user()?.role === Role.ADMIN || this.user()?.role === Role.TUTOR
+  hasTutorAccess(): boolean {
+    return this.user()?.role === Role.ADMIN || this.user()?.role === Role.TUTOR;
   }
 
   private setUserFromLocalStorage(): void {
     const user = this.jwtService.getUser();
-    if (user){
+    if (user) {
       this.setAuth(user);
     }
   }

@@ -10,6 +10,7 @@ import { CodingQuestionsService } from '../../services/coding-questions.service'
 import { FormsModule } from '@angular/forms';
 import { CodeExecutionResult } from '../../../../shared/models/codingQuestion.model';
 import { finalize } from 'rxjs';
+import { SpinnerService } from '../../../../shared/services/spinner.service';
 
 @Component({
   selector: 'app-code-run',
@@ -24,15 +25,16 @@ export class CodeRunComponent {
   codingQuestionsService = inject(CodingQuestionsService);
   output = signal<CodeExecutionResult | null>(null);
   stdin = linkedSignal(() => this.exampleInput());
-  loading = signal(false);
+
+  private spinner = inject(SpinnerService);
 
   executeCode() {
-    this.loading.set(true);
+    this.spinner.openGlobalSpinner();
     this.codingQuestionsService
       .executeCode(this.code(), 'java', this.stdin()!)
       .pipe(
         finalize(() => {
-          this.loading.set(false);
+          this.spinner.closeGlobalSpinner();
         }),
       )
 

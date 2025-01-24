@@ -50,15 +50,9 @@
         class="bg-dark text-white p-3 d-flex align-items-center justify-content-between"
       >
         <h5 class="mb-0">Code Editor</h5>
-        @if (this.isSubmitting()) {
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        } @else {
-          <button class="btn btn-success" (click)="submitSolution()">
-            Submit Solution
-          </button>
-        }
+        <button class="btn btn-success" (click)="submitSolution()">
+          Submit Solution
+        </button>
       </div>
 
       <!-- Monaco Editor -->

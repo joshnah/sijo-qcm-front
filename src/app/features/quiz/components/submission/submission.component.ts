@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { finalize, switchMap } from 'rxjs';
 import { Quiz } from '../../../../shared/models/quiz.model';
 import { Submission } from '../../../../shared/models/submission.model';
+import { SpinnerService } from '../../../../shared/services/spinner.service';
 import { QuizService } from '../../services/quiz.service';
 import { SubmissionService } from '../../services/submission.service';
 
@@ -18,7 +19,8 @@ export class SubmissionComponent implements OnInit {
   route = inject(ActivatedRoute);
   quiz!: Quiz;
   submission!: Submission;
-  loading = signal(true);
+
+  private spinner = inject(SpinnerService);
 
   ngOnInit(): void {
     const submissionId = this.route.snapshot.paramMap.get('id');
@@ -43,6 +45,7 @@ export class SubmissionComponent implements OnInit {
   }
 
   private loadSubmissionAndQuiz(submissionId: string): void {
+    this.spinner.openGlobalSpinner();
     this.submissionService
       .fetchSubmission(submissionId)
       .pipe(
@@ -50,15 +53,16 @@ export class SubmissionComponent implements OnInit {
           this.submission = submission;
           return this.quizService.fetchQuizWithQuestions(submission.quizId);
         }),
+        finalize(() => {
+          this.spinner.closeGlobalSpinner();
+        }),
       )
       .subscribe({
         next: (quiz: Quiz) => {
           this.quiz = quiz;
-          this.loading.set(false);
         },
         error: (error) => {
           console.error('Error loading submission or quiz:', error);
-          this.loading.set(false); // Handle error by updating the loading state
         },
       });
   }

@@ -15,6 +15,7 @@ import { MockQuiz } from '../../mocks/quiz.mock';
 import { NgbNavChangeEvent, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
 import { finalize } from 'rxjs';
+import { SpinnerService } from '../../../../shared/services/spinner.service';
 @Component({
   selector: 'app-quiz-edit',
   imports: [FormsModule, NgbNavModule, EditorComponent],
@@ -27,12 +28,12 @@ export class QuizEditComponent implements OnInit {
   private router = inject(Router);
   private quizService = inject(QuizService);
   private alertService = inject(AlertService);
+  private spinnerService = inject(SpinnerService);
+  private quizBase?: Quiz;
 
   active = signal(1);
-  isGenerating = signal(false);
   quiz = signal<Quiz | null>(null);
   jsonQuiz = signal('');
-  private quizBase?: Quiz;
   editorOptions = {
     language: 'json',
     scrollBeyondLastLine: false,
@@ -54,12 +55,12 @@ export class QuizEditComponent implements OnInit {
     }
   }
   generateQuiz(topics: string, nbQuestions: string) {
-    this.isGenerating.set(true);
+    this.spinnerService.openGlobalSpinner();
     this.quizService
       .generateQuiz(topics, nbQuestions)
       .pipe(
         finalize(() => {
-          this.isGenerating.set(false);
+          this.spinnerService.closeGlobalSpinner();
           this.alertService.setMessage({
             message: 'Quiz has been generated',
             type: 'success',

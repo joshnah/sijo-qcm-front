@@ -20,6 +20,7 @@ import { AlertService } from '../../../../core/alert/services/alert.service';
 import { CodeRunComponent } from '../code-run/code-run.component';
 import { JavaCodeGenerator } from '../../codeGenerators/java.generator';
 import { finalize } from 'rxjs';
+import { SpinnerService } from '../../../../shared/services/spinner.service';
 
 @Component({
   selector: 'app-coding-question-start',
@@ -42,8 +43,8 @@ export class CodingQuestionStartComponent implements OnInit {
   codingQuestion = signal<CodingQuestion | null>(null);
   active = 'description';
   currentSubmission = signal<CodingSubmission | null>(null);
-  isSubmitting = signal(false);
   private route = inject(ActivatedRoute);
+  private spinner = inject(SpinnerService);
   ngOnInit(): void {
     const questionId = this.route.snapshot.paramMap.get('id');
     if (questionId) {
@@ -63,12 +64,12 @@ export class CodingQuestionStartComponent implements OnInit {
   // Placeholder for the submission logic
   submitSolution() {
     if (this.codingQuestion) {
-      this.isSubmitting.set(true);
+      this.spinner.openGlobalSpinner();
       this.codingQuestionsService
         .submitCodingQuestion(this.codingQuestion()!.id, 'java', this.code)
         .pipe(
           finalize(() => {
-            this.isSubmitting.set(false);
+            this.spinner.closeGlobalSpinner();
           }),
         )
         .subscribe({
