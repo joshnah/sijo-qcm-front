@@ -1,6 +1,7 @@
 <div
   class="d-flex justify-content-center align-items-center container flex-column gap-3"
 >
+  @let quiz = quizSignal();
   @if (quiz) {
     <h5 class="mb-1">{{ quiz.title }}</h5>
     <p class="mb-0 text-muted">Category: {{ quiz.category }}</p>

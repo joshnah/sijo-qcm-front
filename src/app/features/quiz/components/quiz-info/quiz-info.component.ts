@@ -21,7 +21,7 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuizInfoComponent {
-  quiz!: Quiz;
+  quizSignal = signal<Quiz | null>(null);
   submissions: Submission[] = [];
 
   private route = inject(ActivatedRoute);
@@ -46,7 +46,7 @@ export class QuizInfoComponent {
         }),
       )
       .subscribe(([quiz, submissions]) => {
-        this.quiz = quiz;
+        this.quizSignal.set(quiz);
         this.submissions = submissions;
       });
   }
