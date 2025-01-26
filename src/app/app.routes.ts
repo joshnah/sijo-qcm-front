@@ -103,6 +103,22 @@ export const routes: Routes = [
           ).then((m) => m.CodingQuestionsListComponent),
       },
       {
+        path: 'create',
+        loadComponent: () =>
+          import(
+            './features/coding-questions/components/coding-question-edit/coding-question-edit.component'
+          ).then((m) => m.CodingQuestionEditComponent),
+        canActivate: [AuthGuard, TutorGuard],
+      },
+      {
+        path: ':id/edit',
+        loadComponent: () =>
+          import(
+            './features/coding-questions/components/coding-question-edit/coding-question-edit.component'
+          ).then((m) => m.CodingQuestionEditComponent),
+        canActivate: [AuthGuard, TutorGuard],
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import(

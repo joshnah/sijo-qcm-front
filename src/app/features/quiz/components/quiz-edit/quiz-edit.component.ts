@@ -1,24 +1,27 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
+  linkedSignal,
   OnInit,
   signal,
-  effect,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { QuizService } from '../../services/quiz.service';
-import { Quiz } from '../../../../shared/models/quiz.model';
 import { FormsModule } from '@angular/forms';
-import { AlertService } from '../../../../core/alert/services/alert.service';
-import { MockQuiz } from '../../mocks/quiz.mock';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbNavChangeEvent, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
 import { finalize } from 'rxjs';
+import { AlertService } from '../../../../core/alert/services/alert.service';
+import { Quiz } from '../../../../shared/models/quiz.model';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
+import { MockQuiz } from '../../mocks/quiz.mock';
+import { QuizService } from '../../services/quiz.service';
+import { QuizFormComponent } from '../quiz-form/quiz-form.component';
+import { JSON_EDITOR_CONFIT } from '../../../../shared/constants/editor.const';
 @Component({
   selector: 'app-quiz-edit',
-  imports: [FormsModule, NgbNavModule, EditorComponent],
+  imports: [FormsModule, NgbNavModule, EditorComponent, QuizFormComponent],
   templateUrl: './quiz-edit.component.html',
   styleUrl: './quiz-edit.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,28 +33,15 @@ export class QuizEditComponent implements OnInit {
   private alertService = inject(AlertService);
   private spinnerService = inject(SpinnerService);
   private quizBase?: Quiz;
-
+  quiz = signal<Quiz>(JSON.parse(JSON.stringify(MockQuiz)));
   active = signal(1);
-  quiz = signal<Quiz | null>(null);
-  jsonQuiz = signal('');
-  editorOptions = {
-    language: 'json',
-    scrollBeyondLastLine: false,
-    lineHeight: 20,
-    fontSize: 14,
-    wordWrap: 'on',
-    wrappingIndent: 'indent',
-    theme: 'customTheme',
-    automaticLayout: true, // Ajuste automatiquement la taille de l'éditeur
-  };
+  jsonQuiz = linkedSignal(() => JSON.stringify(this.quiz(), null, 2));
+  editorOptions = JSON_EDITOR_CONFIT;
 
   ngOnInit(): void {
     const quizId = this.route.snapshot.paramMap.get('id');
     if (quizId) {
       this.fetchQuiz(quizId);
-    } else {
-      const { _id, ...emptyQuiz } = JSON.parse(JSON.stringify(MockQuiz));
-      this.quiz.set(emptyQuiz);
     }
   }
   generateQuiz(topics: string, nbQuestions: string) {
@@ -79,11 +69,11 @@ export class QuizEditComponent implements OnInit {
 
     this.quizService.updateQuiz(this.quiz()!).subscribe({
       next: (quiz) => {
-        this.quiz.set(quiz);
         this.alertService.setMessage({
           message: 'Quiz has been updated',
           type: 'success',
         });
+        this.router.navigate(['/quizzes']);
       },
       error: (err) => {
         this.alertService.setMessage({
@@ -96,8 +86,7 @@ export class QuizEditComponent implements OnInit {
 
   reset(): void {
     if (this.quizBase) {
-      this.quiz.set(JSON.parse(JSON.stringify(this.quizBase)));
-      this.jsonQuiz.set(JSON.stringify(this.quizBase, null, 2));
+      this.quiz.set(this.quizBase);
     }
   }
 
@@ -114,6 +103,7 @@ export class QuizEditComponent implements OnInit {
   create(): void {
     this.quizService.createQuiz(this.quiz()!).subscribe(() => {
       this.router.navigate(['/quizzes']);
+      this.quizService.fetchQuizzes();
       this.alertService.setMessage({
         message: 'Quiz has been created',
         type: 'success',
@@ -125,8 +115,7 @@ export class QuizEditComponent implements OnInit {
     this.quizService.fetchFullQuizById(quizId).subscribe((quiz) => {
       if (quiz) {
         this.quizBase = JSON.parse(JSON.stringify(quiz));
-        this.quiz.set(JSON.parse(JSON.stringify(quiz)));
-        this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
+        this.quiz.set(quiz);
       }
     });
   }
@@ -141,68 +130,20 @@ export class QuizEditComponent implements OnInit {
       });
       return false;
     }
+    this.alertService.setMessage({
+      message: 'JSON is valid',
+      type: 'success',
+    });
     return true;
   }
 
-  addQuestion(): void {
-    this.quiz.update((quiz) => {
-      const newId = `q${(quiz?.questions.length || 0) + 1}`;
-      quiz?.questions.push({
-        id: newId,
-        text: 'Text sample',
-        answers: [
-          { id: 'a1', option: 'option 1', isCorrect: true },
-          { id: 'a2', option: 'option 2' },
-          { id: 'a3', option: 'option 3' },
-        ],
-      });
-      return quiz;
-    });
-  }
-
-  addAnswer(idxQuestion: number) {
-    this.quiz.update((quiz) => {
-      quiz?.questions[idxQuestion].answers.push({
-        id: `a${quiz?.questions[idxQuestion].answers.length + 1}`,
-        option: 'new option',
-      });
-      ``;
-      return quiz;
-    });
-  }
-
-  deleteAnswer(questionIndex: number, answerIndex: number) {
-    this.quiz.update((quiz) => {
-      const answers = quiz?.questions[questionIndex].answers;
-      answers?.splice(answerIndex, 1);
-
-      answers?.forEach((answer, idx) => {
-        answer.id = `a${idx + 1}`;
-      });
-
-      return quiz;
-    });
-  }
-  deleteQuestion(questionIndex: number) {
-    this.quiz.update((quiz) => {
-      const questions = quiz?.questions;
-      questions?.splice(questionIndex, 1);
-
-      // Re-align question IDs and their answers' IDs
-      questions?.forEach((question, qIdx) => {
-        question.id = `q${qIdx + 1}`;
-      });
-
-      return quiz;
-    });
-  }
   onTabChange(event: NgbNavChangeEvent): void {
     // Change from json to form
     if (event.nextId === 1 && !this.checkJson()) {
       event.preventDefault();
-    } else {
-      // From form to Json
-      this.jsonQuiz.set(JSON.stringify(this.quiz(), null, 2));
+    } else if (event.nextId === 2) {
+      // This will force the quiz signal to change and this will also update jsonQuiz signal
+      this.quiz.set({ ...this.quiz() });
     }
   }
   get isEditing() {

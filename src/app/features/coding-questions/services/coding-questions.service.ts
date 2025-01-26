@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import {
   CodeExecution,
@@ -21,7 +21,6 @@ export class CodingQuestionsService {
       next: (codingQuestions) => {
         this.codingQuestionsSignal.set(codingQuestions);
       },
-      error: (err: any) => console.error('Error fetching coding questions'),
     });
   }
 
@@ -47,7 +46,7 @@ export class CodingQuestionsService {
     language: string,
     userCode: string,
   ): Observable<CodingSubmission> {
-    return this.http.post<CodingSubmission>('/coding-questions', {
+    return this.http.post<CodingSubmission>('/coding-questions/submit', {
       questionId,
       language,
       userCode,
@@ -76,5 +75,29 @@ export class CodingQuestionsService {
       language,
       input,
     } as CodeExecution);
+  }
+
+  createCodingQuestion(
+    codingQuestion: CodingQuestion,
+  ): Observable<CodingQuestion> {
+    return this.http.post<CodingQuestion>('/coding-questions', codingQuestion);
+  }
+
+  updateCodingQuestion(
+    codingQuestion: CodingQuestion,
+  ): Observable<CodingQuestion> {
+    return this.http.put<CodingQuestion>(
+      `/coding-questions/${codingQuestion.id}`,
+      codingQuestion,
+    );
+  }
+  deleteCodingQuestion(codingQuestion: CodingQuestion): Observable<any> {
+    return this.http.delete(`/coding-questions/${codingQuestion.id}`);
+  }
+  generateQuestion(topics: string) {
+    const params = new HttpParams().set('topics', topics);
+    return this.http.get<CodingQuestion>('/coding-questions/generate', {
+      params,
+    });
   }
 }

@@ -6,21 +6,21 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EditorComponent } from 'ngx-monaco-editor-v2';
-import { CodingQuestionsService } from '../../services/coding-questions.service';
 import { ActivatedRoute } from '@angular/router';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditorComponent } from 'ngx-monaco-editor-v2';
+import { finalize } from 'rxjs';
+import { AlertService } from '../../../../core/alert/services/alert.service';
 import {
   CodingQuestion,
   CodingSubmission,
 } from '../../../../shared/models/codingQuestion.model';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { CodingSubmissionsListComponent } from '../coding-submissions-list/coding-submissions-list.component';
-import { CodingSubmissionDetailsComponent } from '../coding-submission-details/coding-submission-details.component';
-import { AlertService } from '../../../../core/alert/services/alert.service';
-import { CodeRunComponent } from '../code-run/code-run.component';
-import { JavaCodeGenerator } from '../../codeGenerators/java.generator';
-import { finalize } from 'rxjs';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
+import { JavaCodeGenerator } from '../../codeGenerators/java.generator';
+import { CodingQuestionsService } from '../../services/coding-questions.service';
+import { CodeRunComponent } from '../code-run/code-run.component';
+import { CodingSubmissionDetailsComponent } from '../coding-submission-details/coding-submission-details.component';
+import { CodingSubmissionsListComponent } from '../coding-submissions-list/coding-submissions-list.component';
 
 @Component({
   selector: 'app-coding-question-start',
@@ -43,8 +43,10 @@ export class CodingQuestionStartComponent implements OnInit {
   codingQuestion = signal<CodingQuestion | null>(null);
   active = 'description';
   currentSubmission = signal<CodingSubmission | null>(null);
+
   private route = inject(ActivatedRoute);
   private spinner = inject(SpinnerService);
+
   ngOnInit(): void {
     const questionId = this.route.snapshot.paramMap.get('id');
     if (questionId) {
@@ -66,7 +68,7 @@ export class CodingQuestionStartComponent implements OnInit {
     if (this.codingQuestion) {
       this.spinner.openGlobalSpinner();
       this.codingQuestionsService
-        .submitCodingQuestion(this.codingQuestion()!.id, 'java', this.code)
+        .submitCodingQuestion(this.codingQuestion()?.id!, 'java', this.code)
         .pipe(
           finalize(() => {
             this.spinner.closeGlobalSpinner();

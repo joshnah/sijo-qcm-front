@@ -3,9 +3,8 @@
 >
   @let codingQuestions = codingQuestionsService.codingQuestions();
 
-  <!-- Display List of Available Quizzes -->
   @if (!!codingQuestions) {
-    <h2 class="mb-3">Available Quizzes</h2>
+    <h2 class="mb-3">Available coding questions</h2>
     <ul class="list-group w-100">
       @for (codingQuestion of codingQuestions; track codingQuestion.id) {
         <li
@@ -21,9 +20,22 @@
             >
               Start
             </button>
+            @if (authService.hasTutorAccess()) {
+              <button
+                class="btn btn-outline-primary btn-sm"
+                [routerLink]="['/coding-questions', codingQuestion.id, 'edit']"
+              >
+                Modify
+              </button>
+            }
           </div>
         </li>
       }
     </ul>
+  }
+  @if (authService.hasTutorAccess()) {
+    <button class="btn btn-success" [routerLink]="['/coding-questions/create']">
+      Add new quiz
+    </button>
   }
 </div>

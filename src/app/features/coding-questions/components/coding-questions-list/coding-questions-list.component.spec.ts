@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { CodingQuestionsService } from '../../services/coding-questions.service';
 import { CodingQuestionsListComponent } from './coding-questions-list.component';
 import { signal } from '@angular/core';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 
 describe('CodingQuestionsListComponent', () => {
   let component: CodingQuestionsListComponent;
@@ -20,6 +21,10 @@ describe('CodingQuestionsListComponent', () => {
             codingQuestions: signal([]),
             fetchCodingQuestions: () => {},
           },
+        },
+        {
+          provide: AuthService,
+          useValue: { isAuthenticated: () => true, hasTutorAccess: () => true },
         },
         provideRouter([]),
       ],

@@ -2,7 +2,7 @@
   <!-- Header Section -->
   @if (isEditing) {
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3 class="m-0">Edit Quiz</h3>
+      <h3 class="m-0">Edit coding question</h3>
       <div>
         <button class="btn btn-primary" (click)="reset()">Reset</button>
       </div>
@@ -11,7 +11,7 @@
     <h3>Create new quiz</h3>
   }
 
-  @if (!!quiz()) {
+  @if (!!question()) {
     <!-- Nav Tabs -->
     <ul
       ngbNav
@@ -24,10 +24,9 @@
         <a ngbNavLink>Form Input</a>
         <ng-template ngbNavContent>
           <!-- Form to input quiz details -->
-          <app-quiz-form
-            [(quiz)]="quiz"
-            [isEditing]="isEditing"
-          ></app-quiz-form>
+          <app-coding-question-form
+            [(codingQuestion)]="question"
+          ></app-coding-question-form>
           <!-- Footer Buttons -->
           <div class="d-flex justify-content-end mt-4">
             @if (isEditing) {
@@ -49,7 +48,7 @@
           <div class="editor-container">
             <ngx-monaco-editor
               class="json-editor"
-              [(ngModel)]="jsonQuiz"
+              [(ngModel)]="jsonQuestion"
               [options]="editorOptions"
               aria-label="JSON Quiz Editor"
             ></ngx-monaco-editor>
@@ -64,28 +63,17 @@
           <a ngbNavLink>AI generator</a>
 
           <ng-template ngbNavContent>
-            <form (ngSubmit)="generateQuiz(topics.value, nbQuestions.value)">
+            <form (ngSubmit)="generateQuestion(topics.value)">
               <div class="form-group">
-                <label for="topics">This quiz is about...</label>
+                <label for="topics">This question is about...</label>
                 <input
                   type="text"
                   class="form-control"
                   id="topics"
                   aria-describedby="topics"
                   placeholder="Quiz topics"
-                  value="Java,Python"
+                  value="Binary tree"
                   #topics
-                />
-              </div>
-              <div class="form-group">
-                <label for="nbQuestions">Number of questions</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="nbQuestions"
-                  placeholder="nbQuestions"
-                  value="5"
-                  #nbQuestions
                 />
               </div>
               <button type="submit" class="btn btn-primary mt-3">

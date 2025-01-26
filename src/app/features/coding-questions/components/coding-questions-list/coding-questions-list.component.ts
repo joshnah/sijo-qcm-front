@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CodingQuestionsService } from '../../services/coding-questions.service';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-coding-questions-list',
@@ -8,13 +14,12 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './coding-questions-list.component.html',
   styleUrl: './coding-questions-list.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CodingQuestionsListComponent implements OnInit {
-  codingQuestionsService = inject(CodingQuestionsService)
-
+  codingQuestionsService = inject(CodingQuestionsService);
+  authService = inject(AuthService);
   ngOnInit(): void {
-    if (!this.codingQuestionsService.codingQuestions().length)
-      this.codingQuestionsService.fetchCodingQuestions();
+    this.codingQuestionsService.fetchCodingQuestions();
   }
 }

@@ -1,5 +1,5 @@
 export interface CodingQuestion {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   testCases: TestCase[];
