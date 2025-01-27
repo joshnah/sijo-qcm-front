@@ -11,10 +11,10 @@ import { AuthService } from '../../services/auth.service';
 import { Credentials } from '../../models/credentials.model';
 
 @Component({
-    selector: 'app-auth-page',
-    templateUrl: './auth-page.component.html',
-    styleUrl: './auth-page.component.css',
-    imports: [FormsModule, RouterLink, RouterLinkActive]
+  selector: 'app-auth-page',
+  templateUrl: './auth-page.component.html',
+  styleUrl: './auth-page.component.css',
+  imports: [FormsModule, RouterLink, RouterLinkActive],
 })
 export class AuthPageComponent implements OnInit {
   authService = inject(AuthService);
@@ -22,7 +22,6 @@ export class AuthPageComponent implements OnInit {
   router = inject(Router);
   destroyRef = inject(DestroyRef);
 
-  isSubmitting = false;
   title = '';
   authType = '';
 
@@ -32,8 +31,6 @@ export class AuthPageComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    this.isSubmitting = true;
-
     if (this.authType === 'signin') {
       this.login(form.value as Credentials);
     } else {
@@ -44,20 +41,14 @@ export class AuthPageComponent implements OnInit {
   private login(credentials: Credentials): void {
     this.authService.login(credentials).subscribe({
       next: () => void this.router.navigate(['/']),
-      error: (err) => {
-        console.error(err);
-        this.isSubmitting = false;
-      },
+      error: (err) => {},
     });
   }
 
   private signup(credentials: Credentials) {
     this.authService.register(credentials).subscribe({
       next: () => void this.router.navigate(['/auth/signin']),
-      error: (err) => {
-        console.error(err);
-        this.isSubmitting = false;
-      },
+      error: (err) => {},
     });
   }
 }

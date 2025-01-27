@@ -39,16 +39,6 @@ export class AuthService {
           role: loginResponse.role,
         });
       }),
-      catchError((error) => {
-        console.error('Error occurred:', error);
-
-        this.alertService.setMessage({
-          message: 'Login failed',
-          type: 'danger',
-        });
-
-        return throwError(() => new Error('Login failed. Please try again.'));
-      }),
     );
   }
 

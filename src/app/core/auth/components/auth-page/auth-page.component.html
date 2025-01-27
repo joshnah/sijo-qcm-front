@@ -33,33 +33,27 @@
         />
       </div>
       <div class="d-grid mb-4">
-        <button
-          class="btn btn-primary btn-lg"
-          type="submit"
-          [disabled]="isSubmitting"
-        >
-          Submit
-        </button>
+        <button class="btn btn-primary btn-lg" type="submit">Submit</button>
       </div>
       <div class="text-center">
         @if (authType === "signin") {
-        <a
-          class="btn btn-secondary btn-lg"
-          routerLink="/auth/signup"
-          routerLinkActive="active"
-          aria-current="page"
-        >
-          Signup
-        </a>
+          <a
+            class="btn btn-secondary btn-lg"
+            routerLink="/auth/signup"
+            routerLinkActive="active"
+            aria-current="page"
+          >
+            Signup
+          </a>
         } @else {
-        <a
-          class="btn btn-link fs-5"
-          routerLink="/auth/signin"
-          routerLinkActive="active"
-          aria-current="page"
-        >
-          Already have an account?
-        </a>
+          <a
+            class="btn btn-link fs-5"
+            routerLink="/auth/signin"
+            routerLinkActive="active"
+            aria-current="page"
+          >
+            Already have an account?
+          </a>
         }
       </div>
     </form>

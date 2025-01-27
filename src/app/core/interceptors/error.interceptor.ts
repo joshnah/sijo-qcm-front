@@ -13,14 +13,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((err) => {
-      if (err.status === 401) {
-        router.navigate(['/auth/login']);
-        authService.logout();
-        alertService.setMessage({
-          message: 'Please log in again',
-          type: 'warning',
-        });
-      }
+      const message =
+        err?.status == 500 ? err.statusText : err.error.description;
+      alertService.setMessage({
+        message,
+        type: 'danger',
+      });
       return throwError(() => err.error);
     }),
   );

@@ -8,7 +8,7 @@
       </div>
     </div>
   } @else {
-    <h3>Create new quiz</h3>
+    <h3>Create new coding question</h3>
   }
 
   @if (!!question()) {
@@ -23,7 +23,7 @@
       <li [ngbNavItem]="1">
         <a ngbNavLink>Form Input</a>
         <ng-template ngbNavContent>
-          <!-- Form to input quiz details -->
+          <!-- Form to input coding question details -->
           <app-coding-question-form
             [(codingQuestion)]="question"
           ></app-coding-question-form>
@@ -31,13 +31,11 @@
           <div class="d-flex justify-content-end mt-4">
             @if (isEditing) {
               <button class="btn btn-outline-danger me-2" (click)="delete()">
-                Delete Quiz
+                Delete codingQuestion
               </button>
               <button class="btn btn-success" (click)="save()">Save</button>
             } @else {
-              <button class="btn btn-success" (click)="create()">
-                Create quiz
-              </button>
+              <button class="btn btn-success" (click)="create()">Create</button>
             }
           </div>
         </ng-template>
@@ -50,7 +48,7 @@
               class="json-editor"
               [(ngModel)]="jsonQuestion"
               [options]="editorOptions"
-              aria-label="JSON Quiz Editor"
+              aria-label="JSON question Editor"
             ></ngx-monaco-editor>
           </div>
           <button class="mt-3 btn btn-primary" (click)="checkJson()">
@@ -71,7 +69,7 @@
                   class="form-control"
                   id="topics"
                   aria-describedby="topics"
-                  placeholder="Quiz topics"
+                  placeholder="quesiton topics"
                   value="Binary tree"
                   #topics
                 />
