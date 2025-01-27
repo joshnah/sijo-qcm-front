@@ -1,6 +1,14 @@
 # SijoQcmFront
+This is the front-end of the quiz platform. 
+Backend: https://github.com/joshnah/sijo-qcm-back
+# Functionalities:
+- Authentication and authorization
+- For consultant: Do quiz and do coding questions
+- For Tutor and Admin: Create, Update and Delete quiz and coding questions
+# Version
+Angular version: 19. There are developer reviews components used in this project which might need changes in the future:
+- https://angular.dev/guide/signals/linked-signal
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.3.
 
 ## Development server
 
