@@ -4,7 +4,8 @@ Backend: https://github.com/joshnah/sijo-qcm-back
 # Functionalities:
 - Authentication and authorization
 - For consultant: Do quiz and do coding questions
-- For Tutor and Admin: Create, Update and Delete quiz and coding questions
+- For Tutor and Admin: Create, Update and Delete quiz and coding questions.
+    -  Generate questions with OpenAI API
 # Version
 Angular version: 19. There are developer reviews components used in this project which might need changes in the future:
 - https://angular.dev/guide/signals/linked-signal
